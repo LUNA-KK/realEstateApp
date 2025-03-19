@@ -7,8 +7,8 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className={styles.container}>
-      {children}
+    <div>
+      <div className={styles.container}>{children}</div>
       <BottomNavigation />
     </div>
   );

@@ -1,0 +1,12 @@
+.divider {
+  width: 110%;
+  margin-left: -5%;
+  height: 10px;
+  background-color: #fafafa;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

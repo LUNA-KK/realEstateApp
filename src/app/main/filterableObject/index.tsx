@@ -1,5 +1,5 @@
-import RecommendCard from "./recommendCard";
-import styles from "./recommend.module.css";
+import RecommendCard from "../recommendCard";
+import styles from "./index.module.css";
 
 const mockdata = [
   {
@@ -34,10 +34,9 @@ const mockdata = [
   },
 ];
 
-export default function Recommend() {
+export default function FilterableObject() {
   return (
     <div>
-      <p>추천 매물</p>
       <div className={styles.container}>
         {mockdata.map((data) => (
           <RecommendCard
