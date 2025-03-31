@@ -4,6 +4,8 @@ import { MapMarker, useKakaoLoader } from "react-kakao-maps-sdk";
 import { Map } from "react-kakao-maps-sdk";
 import styles from "./page.module.css";
 import { useRef, useState } from "react";
+import Button from "@/components/Button";
+import { useRouter } from "next/navigation";
 
 const center = {
   lat: 36.763,
@@ -15,7 +17,41 @@ interface Position {
   lng: number;
 }
 
-type RecommnedPosition = Position[];
+interface Marker {
+  id: number;
+  position: Position;
+}
+
+const test = {
+  lat: 36.7688,
+  lng: 127.2835,
+};
+
+const samplePostion = [
+  {
+    id: 1,
+    position: {
+      lat: 36.766,
+      lng: 127.2845,
+    },
+  },
+  {
+    id: 2,
+    position: {
+      lat: 36.7655,
+      lng: 127.2855,
+    },
+  },
+  {
+    id: 3,
+    position: {
+      lat: 36.7688,
+      lng: 127.2835,
+    },
+  },
+];
+
+type RecommnedPosition = Marker[];
 
 export default function KakaoMap() {
   useKakaoLoader({
@@ -23,7 +59,8 @@ export default function KakaoMap() {
     libraries: ["services", "clusterer", "drawing"],
   });
   const mapRef = useRef<kakao.maps.Map>(null);
-  const [position, setPosition] = useState<RecommnedPosition>([]);
+  const [position, setPosition] = useState<RecommnedPosition>(samplePostion);
+  const router = useRouter();
 
   return (
     <div className={styles.container}>
@@ -36,9 +73,12 @@ export default function KakaoMap() {
         level={4}
         ref={mapRef}
       >
-        <MapMarker position={center} />
         {position.map((item) => (
-          <div>{item.lat}</div>
+          <MapMarker
+            position={item.position}
+            key={item.id}
+            onClick={() => router.push(`/houseDetail/${item.id}`)}
+          />
         ))}
       </Map>
     </div>
