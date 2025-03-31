@@ -2,4 +2,6 @@
   padding: 20px 5%;
   margin: 0 auto;
   position: relative;
+  height: calc(100vh - 100px);
+  overflow-y: auto;
 }

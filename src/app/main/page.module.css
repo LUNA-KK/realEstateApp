@@ -10,3 +10,9 @@
   flex-direction: column;
   gap: 20px;
 }
+
+.button {
+  position: fixed;
+  bottom: 90px;
+  right: 0;
+}

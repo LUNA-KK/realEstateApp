@@ -6,6 +6,7 @@ import Recommend from "./recommend";
 import FilterableObject from "./filterableObject";
 import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
+import FilterButtons from "./filterButtons";
 
 export default function Main() {
   const router = useRouter();
@@ -17,8 +18,9 @@ export default function Main() {
       </Button>
       <Recommend />
       <div className={styles.divider} />
+      <FilterButtons />
       <FilterableObject />
-      <button className="">매물등록</button>
+      <button className={styles.button}>매물등록</button>
     </div>
   );
 }

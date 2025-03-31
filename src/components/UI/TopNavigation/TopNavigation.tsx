@@ -2,10 +2,24 @@
 
 import Image from "next/image";
 import styles from "./TopNavigation.module.css";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+
+const matchTitle = [
+  {
+    name: "매물 지도",
+    pathname: "/maps",
+  },
+  {
+    name: "필터",
+    pathname: "/filterPage",
+  },
+];
 
 export default function TopNavigation() {
   const router = useRouter();
+  const pathname = usePathname();
+
+  const title = matchTitle.find((item) => item.pathname === pathname)?.name;
   return (
     <div className={styles.container}>
       <Image
@@ -15,7 +29,7 @@ export default function TopNavigation() {
         width={20}
         height={20}
       />
-      <div className={styles.title}>매물 지도</div>
+      <div className={styles.title}>{title}</div>
     </div>
   );
 }
