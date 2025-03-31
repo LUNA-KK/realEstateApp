@@ -116,6 +116,7 @@ const FilterTargetWithSlider = ({ target }: { target: Target[] }) => {
 export default function FilterPage() {
   return (
     <div className={styles.container}>
+      <div />
       <FilterArea title={"매물 종류"} target={type} />
       <div className={styles.divider} />
       <FilterArea title={"거래 방식"} target={transactionType} />

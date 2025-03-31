@@ -12,6 +12,7 @@ export default function Main() {
   const router = useRouter();
   return (
     <div className={styles.container}>
+      <div className={styles.space} />
       <Button onClick={() => router.push("/maps")}>
         <Image src="/marker-main.svg" alt="marker 1" width={20} height={20} />
         지도로 보기
@@ -20,7 +21,13 @@ export default function Main() {
       <div className={styles.divider} />
       <FilterButtons />
       <FilterableObject />
-      <button className={styles.button}>매물등록</button>
+      <div className={styles.space} />
+      <div className={styles["button-wrapper"]}>
+        <button className={styles.button}>
+          <img src="/pencil.png" />
+          매물 등록
+        </button>
+      </div>
     </div>
   );
 }

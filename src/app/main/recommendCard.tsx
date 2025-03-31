@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "./recommendCard.module.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 interface RecommendCardProps {
@@ -25,6 +25,8 @@ export default function RecommendCard({
   location,
 }: RecommendCardProps) {
   const [liked, setLiked] = useState(false);
+  const [show, setShow] = useState(false);
+  const ref = useRef<HTMLAnchorElement>(null);
 
   const toggleLike = (id: number) => {
     const likeInfo = JSON.parse(localStorage.getItem("liked") || "[]");
@@ -45,10 +47,22 @@ export default function RecommendCard({
     if (likeInfo.includes(houseid)) {
       setLiked(true);
     }
+
+    if (ref.current) {
+      const { width } = ref.current.getBoundingClientRect();
+      if (width > 300) {
+        setShow(true);
+      }
+    }
   }, []);
 
   return (
-    <Link href={`/detail/${houseid}`} className={styles.container}>
+    <Link
+      href={`/houseDetail/${houseid}`}
+      className={styles.container}
+      ref={ref}
+    >
+      {show && <img src="/housePicture.jpg" className={styles.image} />}
       <div className={styles.content}>
         <div>{type}</div>
         <div>
