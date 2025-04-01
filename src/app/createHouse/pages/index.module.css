@@ -31,7 +31,7 @@
 .container {
   display: grid;
   height: calc(100vh - 77.5px);
-  grid-template-rows: 7fr 1fr;
+  grid-template-rows: 5fr 1fr;
 }
 
 .content {
