@@ -6,8 +6,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { use } from "react";
+import { useSampleHouseList } from "@/app/store/useSampleHouseList";
 
-const sample = {
+const mock = {
   houseId: 1,
   buildingName: "강남 타워",
   purpose: "주거용",
@@ -24,6 +25,13 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const { id } = use(params);
   const [liked, setLiked] = useState(false);
+  const sample = useSampleHouseList((state) => state.sampleHouseList).find(
+    (house) => house.houseid === Number(id)
+  );
+  const t = useSampleHouseList((state) => state.sampleHouseList);
+
+  console.log(id);
+  console.log(t);
 
   useEffect(() => {
     const likeInfo = JSON.parse(localStorage.getItem("liked") || "[]");
@@ -31,6 +39,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       setLiked(true);
     }
   }, []);
+
+  if (!sample) return null;
 
   return (
     <div className={styles.wrapper}>
@@ -68,7 +78,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
           <div className={styles.title}>매물 정보</div>
           <div></div>
           <div className={styles.line}>
-            매물 종류 <div>{sample.purpose}</div>
+            매물 종류 <div>{mock.purpose}</div>
           </div>
           <div className={styles.line}>
             거래 유형 <div>{sample.transactionType}</div>
@@ -79,7 +89,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
           <div className={styles.line}>
             면적{" "}
             <div>
-              {sample.exclusiveArea} m<sup>2</sup>
+              {mock.exclusiveArea} m<sup>2</sup>
             </div>
           </div>
           <div className={styles.line}>준공년도</div>

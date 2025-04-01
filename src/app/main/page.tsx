@@ -23,7 +23,10 @@ export default function Main() {
       <FilterableObject />
       <div className={styles.space} />
       <div className={styles["button-wrapper"]}>
-        <button className={styles.button}>
+        <button
+          className={styles.button}
+          onClick={() => router.push("/createHouse")}
+        >
           <img src="/pencil.png" />
           매물 등록
         </button>

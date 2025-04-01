@@ -13,22 +13,32 @@ const matchTitle = [
     name: "필터",
     pathname: "/filterPage",
   },
+  {
+    name: "매물 등록",
+    pathname: "/createHouse",
+  },
 ];
 
-export default function TopNavigation() {
+interface Props {
+  onclick?: () => void;
+}
+
+export default function TopNavigation({ onclick }: Props) {
   const router = useRouter();
   const pathname = usePathname();
 
   const title = matchTitle.find((item) => item.pathname === pathname)?.name;
   return (
     <div className={styles.container}>
-      <Image
-        onClick={() => router.back()}
-        src="/back.svg"
-        alt="back"
-        width={20}
-        height={20}
-      />
+      <button className={styles.button}>
+        <Image
+          onClick={onclick ? onclick : () => router.back()}
+          src="/back.svg"
+          alt="back"
+          width={20}
+          height={20}
+        />
+      </button>
       <div className={styles.title}>{title}</div>
     </div>
   );

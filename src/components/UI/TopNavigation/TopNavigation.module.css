@@ -11,3 +11,9 @@
   width: 100%;
   text-align: center;
 }
+
+.button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
