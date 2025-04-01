@@ -40,8 +40,6 @@ export default function HouseDetailForm() {
       isFavorite: false,
     });
     router.replace(`/houseDetail/${createId}`);
-    store.resetHouseStore();
-    resetStep();
     alert("매물을 등록했습니다.");
   };
 

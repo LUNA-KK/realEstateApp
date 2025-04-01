@@ -5,10 +5,18 @@ import ProgressBar from "./components/progressbar";
 import styles from "./layout.module.css";
 import { useStep } from "./useStep";
 import { useRouter } from "next/navigation";
+import { useHouseStore } from "./useHouseStore";
+import { useEffect } from "react";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const { currentStep, prevStep, prevTransactionStep, transactionStep } =
-    useStep();
+  const {
+    currentStep,
+    prevStep,
+    prevTransactionStep,
+    transactionStep,
+    resetStep,
+  } = useStep();
+  const { resetHouseStore } = useHouseStore();
   const router = useRouter();
 
   const handleBackButtonClick = () => {
@@ -22,6 +30,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
     router.back();
   };
+
+  useEffect(() => {
+    return () => {
+      resetHouseStore();
+      resetStep();
+    };
+  }, []);
 
   return (
     <div className={styles.container}>
