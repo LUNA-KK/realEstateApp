@@ -27,6 +27,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className={styles.container}>
       <TopNavigation onclick={handleBackButtonClick} />
       <div className={styles.content}>
+        <div className={styles.space} />
         <ProgressBar currentStep={currentStep} />
         {children}
       </div>

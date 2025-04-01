@@ -19,6 +19,7 @@ export default function AreaForm() {
             className={styles.input}
             onChange={handleChange}
             value={exclusiveArea}
+            inputMode="numeric"
           />
           <div className={styles["search-button"]}>평</div>
         </div>

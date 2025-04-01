@@ -7,7 +7,7 @@ export default function ProgressBar({ currentStep }: { currentStep: number }) {
     "주소를 입력해주세요.",
     "거래 유형을 선택해주세요.",
     "매물 사진을 등록해주세요.",
-    "매물 소개를 입력해주세요.",
+    "면적(전용 면적)을 입력해주세요.",
     "매물에 대한 정보를 입력해주세요.",
   ];
 

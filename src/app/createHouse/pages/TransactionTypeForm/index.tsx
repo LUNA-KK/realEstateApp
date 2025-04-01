@@ -79,6 +79,7 @@ export default function TransactionTypeForm() {
             className={styles.input}
             onChange={handleChange}
             value={price}
+            inputMode="numeric"
           />
           <div className={styles["search-button"]}>만원</div>
         </div>
