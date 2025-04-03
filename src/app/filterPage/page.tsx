@@ -88,10 +88,23 @@ const FilterWithSlider = ({
       <div className={styles["slider-wrapper"]}>
         <div style={{ width: "85%" }}>
           <Slider
+            className={styles.slider}
             aria-label="Default"
             valueLabelDisplay="auto"
             marks={mark}
             defaultValue={100}
+            sx={{
+              "& .MuiSlider-rail": {
+                backgroundColor: "#d9d9d9",
+                boxShadow: "inset 0px 0px 4px -2px #000",
+              },
+              "& .MuiSlider-mark": {
+                display: "none",
+              },
+              "& .MuiSlider-thumb": {
+                backgroundColor: "#fff",
+              },
+            }}
           />
         </div>
       </div>
