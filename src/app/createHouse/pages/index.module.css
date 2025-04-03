@@ -30,7 +30,7 @@
 
 .container {
   display: grid;
-  height: calc(100vh - 97.5px);
+  height: calc(100dvh - 97.5px);
   grid-template-rows: 5fr 1fr;
 }
 
