@@ -5,3 +5,7 @@
   min-width: 100%;
   margin-right: -5%;
 }
+
+.container::-webkit-scrollbar {
+  display: none;
+}

@@ -28,10 +28,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const sample = useSampleHouseList((state) => state.sampleHouseList).find(
     (house) => house.houseid === Number(id)
   );
-  const t = useSampleHouseList((state) => state.sampleHouseList);
-
-  console.log(id);
-  console.log(t);
 
   useEffect(() => {
     const likeInfo = JSON.parse(localStorage.getItem("liked") || "[]");
@@ -84,7 +80,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
             거래 유형 <div>{sample.transactionType}</div>
           </div>
           <div className={styles.line}>
-            가격 <div>{sample.price}원</div>
+            가격 <div>{sample.price}만원</div>
           </div>
           <div className={styles.line}>
             면적{" "}
