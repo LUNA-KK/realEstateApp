@@ -1,8 +1,25 @@
+"use client";
+import { SearchOff } from "@mui/icons-material";
+import styles from "./page.module.css";
+
 export default function DocumentPage() {
+  const docs: string[] = [];
   return (
-    <div>
-      <h1>Document Page</h1>
-      <p>This is the document analysis page.</p>
+    <div className={styles.container}>
+      <div className={styles.title}>문서 분석</div>
+      {docs.length > 0 ? (
+        <div>
+          <div>분석된 문서들</div>
+          {docs.map((doc) => (
+            <div>1</div>
+          ))}
+        </div>
+      ) : (
+        <div className={styles.empty}>
+          <SearchOff />
+          분석된 문서가 없습니다.
+        </div>
+      )}
     </div>
   );
 }
