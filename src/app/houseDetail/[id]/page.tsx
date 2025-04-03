@@ -29,6 +29,20 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     (house) => house.houseid === Number(id)
   );
 
+  const toggleLike = (id: number) => {
+    const likeInfo = JSON.parse(localStorage.getItem("liked") || "[]");
+    if (likeInfo.includes(id)) {
+      localStorage.setItem(
+        "liked",
+        JSON.stringify(likeInfo.filter((item: number) => item !== id))
+      );
+      setLiked(!liked);
+      return;
+    }
+    localStorage.setItem("liked", JSON.stringify([...likeInfo, id]));
+    setLiked(!liked);
+  };
+
   useEffect(() => {
     const likeInfo = JSON.parse(localStorage.getItem("liked") || "[]");
     if (likeInfo.includes(Number(id))) {
@@ -52,7 +66,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       <img className={styles.image} src="/housePicture.jpg" />
       <div className={styles.layout}>
         <div className={styles["button-wrapper"]}>
-          <div className={styles.svg}>
+          <button onClick={() => toggleLike(Number(id))} className={styles.svg}>
             <svg
               width="30"
               height="30"
@@ -65,7 +79,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
             >
               <path d="M12 21s-6-4.35-9-7.35C0.5 10.5 1.5 6 5 4c2.5-1.5 5.5 0 7 2 1.5-2 4.5-3.5 7-2 3.5 2 4.5 6.5 2 9.65-3 3-9 7.35-9 7.35z" />
             </svg>
-          </div>
+          </button>
           <div className={styles.inquiry}>
             <Button>문의하기</Button>
           </div>
