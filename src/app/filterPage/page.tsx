@@ -86,7 +86,7 @@ const FilterWithSlider = ({
     <div>
       <div className={styles.title}>{title}</div>
       <div className={styles["slider-wrapper"]}>
-        <div style={{ width: "90%" }}>
+        <div style={{ width: "85%" }}>
           <Slider
             aria-label="Default"
             valueLabelDisplay="auto"
