@@ -1,28 +1,33 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
+import { Article, Home, ChatBubble, AccountCircle } from "@mui/icons-material";
 import styles from "./BottomNavigation.module.css";
 
 const navigationInfo = [
   {
     title: "홈",
-    icon: "/home.svg",
+    icon: <Home />,
+    passive: <Home color="action" />,
     link: "/main",
   },
   {
     title: "문서 분석",
-    icon: "/document.svg",
-    link: "/document",
+    icon: <Article />,
+    passive: <Article color="action" />,
+    link: "/main/document",
   },
   {
-    title: "계약 관리",
-    icon: "/contract.svg",
-    link: "/contract",
+    title: "챗봇",
+    icon: <ChatBubble />,
+    passive: <ChatBubble color="action" />,
+    link: "/main/contract",
   },
   {
     title: "프로필",
-    icon: "/profile.svg",
-    link: "/profile",
+    icon: <AccountCircle />,
+    passive: <AccountCircle color="action" />,
+    link: "/main/profile",
   },
 ];
 
@@ -38,11 +43,7 @@ export default function BottomNavigation() {
           className={styles.item}
           key={item.link}
         >
-          <img
-            style={{ fill: pathname === item.link ? "yellow" : "red" }}
-            src={item.icon}
-            alt={item.title}
-          />
+          {pathname === item.link ? item.icon : item.passive}
           <span>{item.title}</span>
         </button>
       ))}
