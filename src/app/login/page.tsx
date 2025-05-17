@@ -28,17 +28,14 @@ export default function Login() {
       userPw: user.password,
     };
     if (Object.values(user).every((value) => value)) {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_PATH}/auth/login`,
-        {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(userObject),
-        }
-      );
+      const response = await fetch(`api/auth/login`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userObject),
+      });
       const data = await response.json();
       if (response.status === 200) {
         sessionStorage.setItem("accessToken", data.accessToken);
