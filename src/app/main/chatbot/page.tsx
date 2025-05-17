@@ -4,8 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
 import SendIcon from "@mui/icons-material/Send";
 import CircularProgress from "@mui/material/CircularProgress";
-import Lottie from "lottie-react";
 import loadingLottie from "@/assets/loading.json";
+import dynamic from "next/dynamic";
+
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 interface Message {
   role: "user" | "assistant";
