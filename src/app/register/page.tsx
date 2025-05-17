@@ -35,6 +35,14 @@ export default function Register() {
   };
 
   const submit = async () => {
+    const passwordRegex =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{10,}$/;
+    if (!passwordRegex.test(user.password)) {
+      alert(
+        "비밀번호는 영문자, 숫자, 특수문자를 포함하여 10자 이상이어야 합니다."
+      );
+      return;
+    }
     if (Object.values(user).every((value) => value)) {
       const userObject = {
         userId: user.id,
