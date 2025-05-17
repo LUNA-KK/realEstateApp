@@ -1,0 +1,27 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  gap: 20px;
+  height: 100%;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.add-button {
+  width: 90%;
+  border: none;
+  border-radius: 8px;
+  height: 10%;
+  cursor: pointer;
+}
+
+.period {
+  width: 90%;
+  text-align: left;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #00a6ff;
+  color: white;
+  border-radius: 8px;
+}

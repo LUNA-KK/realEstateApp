@@ -21,13 +21,13 @@ const navigationInfo = [
     title: "챗봇",
     icon: <ChatBubble />,
     passive: <ChatBubble color="action" />,
-    link: "/main/contract",
+    link: "/main/chatbot",
   },
   {
     title: "프로필",
     icon: <AccountCircle />,
     passive: <AccountCircle color="action" />,
-    link: "/main/profile",
+    link: "/main/contract",
   },
 ];
 

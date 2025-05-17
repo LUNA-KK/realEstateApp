@@ -80,3 +80,18 @@
 .file {
   display: none;
 }
+
+.address-detail {
+  border: 1px solid #d9d9d9;
+  width: 100%;
+  padding: 10px 20px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  height: 50px;
+}
+
+.address-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

@@ -2,6 +2,7 @@ import Button from "@/components/Button";
 import styles from "../index.module.css";
 import { useStep } from "../../useStep";
 import { useRef, useState } from "react";
+import { useHouseStore } from "../../useHouseStore";
 
 export default function ImageForm() {
   const { nextStep } = useStep();
@@ -9,17 +10,18 @@ export default function ImageForm() {
   const openFile = () => {
     ref.current?.click();
   };
-  const [url, setUrl] = useState("");
+  const { setImageFile } = useHouseStore();
+  const [preview, setPreview] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (e) => {
-      const imageUrl = e.target?.result;
-      setUrl(imageUrl as string);
+    reader.onloadend = () => {
+      setPreview(reader.result as string);
     };
     reader.readAsDataURL(file);
+    setImageFile(file);
     e.target.value = "";
   };
 
@@ -37,9 +39,9 @@ export default function ImageForm() {
           accept="image/*"
           onChange={handleChange}
         />
-        {url && (
+        {preview && (
           <img
-            src={url}
+            src={preview}
             style={{ width: "100%", height: "300px", objectFit: "contain" }}
           />
         )}

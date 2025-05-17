@@ -3,9 +3,10 @@
 import { MapMarker, useKakaoLoader } from "react-kakao-maps-sdk";
 import { Map } from "react-kakao-maps-sdk";
 import styles from "./page.module.css";
-import { useRef, useState } from "react";
-import Button from "@/components/Button";
+import { useEffect, useRef, useState, useMemo } from "react";
+import Script from "next/script";
 import { useRouter } from "next/navigation";
+import { authFetch } from "../util/authFetch";
 
 const center = {
   lat: 36.763,
@@ -20,6 +21,11 @@ interface Position {
 interface Marker {
   id: number;
   position: Position;
+}
+
+interface AddressAndId {
+  id: number;
+  address: string;
 }
 
 const test = {
@@ -53,17 +59,104 @@ const samplePostion = [
 
 type RecommnedPosition = Marker[];
 
+const MarkerList = ({
+  geocoder,
+}: {
+  geocoder: kakao.maps.services.Geocoder;
+}) => {
+  const [position, setPosition] = useState<RecommnedPosition>([]);
+  const router = useRouter();
+
+  console.log(position);
+
+  useEffect(() => {
+    // geocoder가 준비되면 한 번만 실행
+    if (!geocoder) return;
+
+    const handleGeocode = async (items: AddressAndId[]) => {
+      const positions: Marker[] = [];
+      for (const { address, id } of items) {
+        const result = await new Promise<Marker | null>((resolve) => {
+          geocoder.addressSearch(address, (res, status) => {
+            if (status === kakao.maps.services.Status.OK && res[0]) {
+              const { x, y } = res[0];
+              resolve({
+                id,
+                position: { lat: parseFloat(y), lng: parseFloat(x) },
+              });
+            } else {
+              resolve(null);
+            }
+          });
+        });
+        if (result) positions.push(result);
+      }
+      setPosition(positions);
+    };
+
+    const getList = async () => {
+      try {
+        const allList = await Promise.all(
+          Array.from({ length: 10 }, (_, i) =>
+            authFetch({
+              url: `${process.env.NEXT_PUBLIC_API_PATH}/house-board/list?page=${i}`,
+            })
+          )
+        );
+        const responses = await Promise.all(
+          allList.map((r) => {
+            if (!r.ok) throw new Error("Network response was not ok");
+            return r.json();
+          })
+        );
+        const addressAndIds = responses.flatMap((res) =>
+          res.content.map((item: any) => ({
+            id: item.pid,
+            address: item.address,
+          }))
+        );
+        await handleGeocode(addressAndIds);
+      } catch (error) {
+        console.error("Error fetching or processing data:", error);
+      }
+    };
+
+    getList();
+  }, []); // geocoder가 준비된 후에만 실행
+
+  return (
+    <>
+      {position.map((item) => (
+        <MapMarker
+          position={item.position}
+          key={item.id}
+          onClick={() => router.push(`/houseDetail/${item.id}`)}
+        />
+      ))}
+    </>
+  );
+};
+
 export default function KakaoMap() {
   useKakaoLoader({
     appkey: process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY as string,
     libraries: ["services", "clusterer", "drawing"],
   });
+
   const mapRef = useRef<kakao.maps.Map>(null);
-  const [position, setPosition] = useState<RecommnedPosition>(samplePostion);
   const router = useRouter();
+  const [position, setPosition] = useState<RecommnedPosition>([]);
+
+  // geocoder 인스턴스를 useMemo로 한 번만 생성
+  const geocoder =
+    typeof kakao !== "undefined" ? new kakao.maps.services.Geocoder() : null;
 
   return (
     <div className={styles.container}>
+      <Script
+        src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=YOUR_CLIENT_ID&submodules=geocoder"
+        strategy="afterInteractive"
+      />
       <Map
         style={{
           width: "100%",
@@ -73,13 +166,7 @@ export default function KakaoMap() {
         level={4}
         ref={mapRef}
       >
-        {position.map((item) => (
-          <MapMarker
-            position={item.position}
-            key={item.id}
-            onClick={() => router.push(`/houseDetail/${item.id}`)}
-          />
-        ))}
+        {geocoder && <MarkerList geocoder={geocoder} />}
       </Map>
     </div>
   );

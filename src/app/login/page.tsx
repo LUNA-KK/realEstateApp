@@ -22,10 +22,32 @@ export default function Login() {
     });
   };
 
-  const submit = () => {
-    if (user.id === "test1" && user.password === "test1") {
-      alert("로그인 성공");
-      router.push("/main");
+  const submit = async () => {
+    const userObject = {
+      userId: user.id,
+      userPw: user.password,
+    };
+    if (Object.values(user).every((value) => value)) {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_PATH}/auth/login`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userObject),
+        }
+      );
+      const data = await response.json();
+      if (response.status === 200) {
+        sessionStorage.setItem("accessToken", data.accessToken);
+        sessionStorage.setItem("refreshToken", data.refreshToken);
+        alert("로그인 성공");
+        router.push("/main");
+      } else {
+        alert("로그인 실패");
+      }
     }
   };
 

@@ -2,8 +2,9 @@
 import { SearchOff } from "@mui/icons-material";
 import styles from "./page.module.css";
 
+const docs: string[] = [];
+
 export default function DocumentPage() {
-  const docs: string[] = [];
   return (
     <div className={styles.container}>
       <div className={styles.title}>문서 분석</div>
