@@ -16,8 +16,12 @@ export default function Onboarding() {
           width={250}
           height={250}
         />
-        <div>
-          안전하고 손 쉬운 부동삭 계약
+        <div
+          style={{
+            textAlign: "center",
+          }}
+        >
+          안전하고 손 쉬운 부동산
           <br />
           지금 로그인하고 시작해보세요!
         </div>
