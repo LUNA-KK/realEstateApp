@@ -113,7 +113,7 @@ export default function Register() {
           <Input
             value={user.email}
             onChange={handleChange}
-            name="phone"
+            name="email"
             placeholder="이메일을 입력해주세요. ex) test@email.com"
           />
           <input type="file" onChange={onfileChange} />
