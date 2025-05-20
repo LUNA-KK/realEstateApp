@@ -83,16 +83,17 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     };
     const fetchData = async () => {
       const response = await authFetch({
-        url: `${process.env.NEXT_PUBLIC_API_PATH}/house-board/${id}`,
+        url: `/api/house-board/detail/${id}`,
       });
       if (!response.ok) {
         setError(true);
         return;
       }
       const data = await response.json();
-      const imageUrl = `${process.env.NEXT_PUBLIC_PATH}${data.houseBoardDTO.pimg}`;
-      const imageResponse = await getImage(imageUrl);
-      console.log(imageResponse);
+      if (data.houseBoardDTO.pimg) {
+        const imageUrl = `${process.env.NEXT_PUBLIC_PATH}${data.houseBoardDTO.pimg}`;
+        const imageResponse = await getImage(imageUrl);
+      }
       setHouseDetail(data);
     };
     fetchData();

@@ -62,31 +62,24 @@ const useCreateHouse = () => {
       );
 
       if (store.imageFile) {
-        console.log("imageFile", store.imageFile);
         formData.append("pimg", store.imageFile);
       }
 
-      for (const key in formData.entries()) {
-        console.log(key, formData.get(key));
-      }
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_PATH}/house-board/create`,
-        {
-          method: "POST",
-          body: formData,
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
-          },
-        }
-      );
+      const response = await fetch("/api/house-board/create-house", {
+        method: "POST",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
+        },
+      });
       const data = await response.json();
-      console.log(data);
-      nextId.current = data.houseInfoDTO.houseId;
+
+      nextId.current = data.houseInfoDTO.pid;
+
       if (response.status < 200 && response.status >= 400) {
         throw new Error("Failed to create house");
       }
-    } catch (error) {
+    } catch {
       isError.current = true;
     } finally {
       setIsPending(false);
@@ -125,6 +118,7 @@ export default function HouseDetailForm() {
     await createHouse(store);
     if (isError.current) {
       alert("매물 등록에 실패했습니다.");
+      isError.current = false;
       return;
     }
     store.resetHouseStore();

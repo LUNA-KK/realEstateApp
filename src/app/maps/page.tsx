@@ -99,7 +99,7 @@ const MarkerList = ({
         const allList = await Promise.all(
           Array.from({ length: 10 }, (_, i) =>
             authFetch({
-              url: `${process.env.NEXT_PUBLIC_API_PATH}/house-board/list?page=${i}`,
+              url: `/api/house-board/create?page=${i}`,
             })
           )
         );
@@ -144,8 +144,6 @@ export default function KakaoMap() {
   });
 
   const mapRef = useRef<kakao.maps.Map>(null);
-  const router = useRouter();
-  const [position, setPosition] = useState<RecommnedPosition>([]);
 
   // geocoder 인스턴스를 useMemo로 한 번만 생성
   const geocoder =

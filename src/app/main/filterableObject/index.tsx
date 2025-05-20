@@ -26,7 +26,7 @@ export default function FilterableObject() {
 
   const fetchData = useCallback(async () => {
     const response = await authFetch({
-      url: `${process.env.NEXT_PUBLIC_API_PATH}/house-board/list?page=${pageNumber.current}`,
+      url: `/api/house-board/create?page=${pageNumber.current}`,
     });
     if (!response.ok) {
       throw new Error("Network response was not ok");

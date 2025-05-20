@@ -58,14 +58,12 @@ export default function Register() {
       );
       formData.append("userimg", user.file as Blob);
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_PATH}/member/join`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-      if (response.status === 201) {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.status === 200 || response.status === 201) {
         alert("회원가입 성공");
         router.push("/login");
       } else {
