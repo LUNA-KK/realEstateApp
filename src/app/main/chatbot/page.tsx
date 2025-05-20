@@ -77,25 +77,24 @@ export default function ContractPage() {
 
     try {
       setLoading(true);
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_PATH}/Realty/chat`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
-          },
-          body: inputValue,
-        }
-      );
+      const response = await fetch(`/api/chatbot`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
+        },
+        body: JSON.stringify({ value: inputValue }),
+      });
       const data: ChatResponse = await response.json();
-      setLoading(false);
+
       setMessages((prev) => [
         ...prev,
         { role: "assistant", message: data.result.message.content },
       ]);
     } catch (error) {
       console.error("An unexpected error occurred:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
