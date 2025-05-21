@@ -1,10 +1,6 @@
-// app/api/login/route.ts
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(req: NextRequest, { params }: any) {
   const token = req.headers.get("authorization") ?? "";
   const { id } = params;
 
