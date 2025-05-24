@@ -51,6 +51,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const [liked, setLiked] = useState(false);
   const [houseDetail, setHouseDetail] = useState<DetailResponse | null>(null);
   const [error, setError] = useState<any>(false);
+  const [image, setImage] = useState<any>();
 
   const onClickAnalyze = () => {
     router.push(`/main/document/analyze/${id}`);
@@ -76,7 +77,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       setLiked(true);
     }
     const getImage = async (url: string) => {
-      const get = await fetch(url, {
+      const get = await fetch(`/api/house-board/detail/image?url=${url}`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
         },
@@ -94,8 +95,18 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       }
       const data = await response.json();
       setHouseDetail(data);
+      return data;
     };
-    fetchData();
+    fetchData()
+      .then((res) => {
+        return getImage(res.houseBoardDTO.pimg);
+      })
+      .then((res) => {
+        return res.blob();
+      })
+      .then((res) => {
+        setImage(URL.createObjectURL(res));
+      });
   }, []);
 
   if (error) {
@@ -113,11 +124,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       />
       <img
         className={styles.image}
-        src={
-          houseDetail.houseBoardDTO.pimg
-            ? `${process.env.NEXT_PUBLIC_PATH}${houseDetail.houseBoardDTO.pimg}`
-            : "/housePicture.jpg"
-        }
+        src={houseDetail.houseBoardDTO.pimg ? `${image}` : "/housePicture.jpg"}
       />
       <div className={styles.layout}>
         <div className={styles["button-wrapper"]}>
