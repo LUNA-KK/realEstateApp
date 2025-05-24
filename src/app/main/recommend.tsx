@@ -18,7 +18,7 @@ export default function Recommend() {
       const data = await response.json();
       setData(data);
     };
-    fetchData();
+    // fetchData();
   }, []);
 
   return (
@@ -33,7 +33,6 @@ export default function Recommend() {
             transactionType={data.transactionType}
             price={data.price}
             area={data.area}
-            floor={data.floor}
             location={data.location}
           />
         ))}

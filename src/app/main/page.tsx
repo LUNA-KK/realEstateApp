@@ -7,6 +7,7 @@ import FilterableObject from "./filterableObject";
 import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 import FilterButtons from "./filterButtons";
+import CrawlingRecommnet from "./recommnet/CrawlingRecommnet";
 
 export default function Main() {
   const router = useRouter();
@@ -20,7 +21,9 @@ export default function Main() {
       <Recommend />
       <div className={styles.divider} />
       <FilterButtons />
+      {/* <CrawlingRecommnet /> */}
       <FilterableObject />
+
       <div className={styles.space} />
       <div className={styles["button-wrapper"]}>
         <button

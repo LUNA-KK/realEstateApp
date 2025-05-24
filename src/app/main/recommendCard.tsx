@@ -10,7 +10,6 @@ interface RecommendCardProps {
   transactionType: string;
   price: number;
   area: string;
-  floor: string;
   location: string;
   isFavorite?: boolean;
 }
@@ -21,7 +20,6 @@ export default function RecommendCard({
   transactionType,
   price,
   area,
-  floor,
   location,
 }: RecommendCardProps) {
   const [liked, setLiked] = useState(false);
@@ -66,11 +64,9 @@ export default function RecommendCard({
       <div className={styles.content}>
         <div>{type}</div>
         <div>
-          {transactionType} / {price}
+          {transactionType} / {price}만원
         </div>
-        <div>
-          {area} / {floor}
-        </div>
+        <div>{area}</div>
         <div>{location}</div>
       </div>
       <div className={styles.like}>
