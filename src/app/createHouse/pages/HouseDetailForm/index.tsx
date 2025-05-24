@@ -39,7 +39,9 @@ const useCreateHouse = () => {
           purpose: store.purpose,
           transactionType: store.transactionType,
           price: store.price,
-          maintenanceFee: 10,
+          maintenanceFee: store.maintenanceFee,
+          rentPrc: store.rentPrc,
+          parkingPerHouseholdCount: store.parkingPerHouseholdCount,
           address: store.address,
           addressDetail: store.addressDetail,
           exclusiveArea: store.exclusiveArea,
@@ -52,6 +54,9 @@ const useCreateHouse = () => {
           loanAvailable: "가능",
           pet: "가능",
           parking: "가능",
+          latitude: null,
+          longitude: null,
+
           houseDetail: store.houseDetail,
         },
       };

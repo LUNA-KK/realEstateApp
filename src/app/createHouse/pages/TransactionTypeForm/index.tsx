@@ -61,11 +61,32 @@ const Step1 = () => {
 };
 export default function TransactionTypeForm() {
   const { transactionStep, nextStep } = useStep();
-  const { transactionType, setPrice, price } = useHouseStore();
+  const {
+    transactionType,
+    setPrice,
+    price,
+    rentPrc,
+    setRentPrc,
+    maintenanceFee,
+    setMaintenanceFee,
+  } = useHouseStore();
+
+  const isRent = transactionType === "월세";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^0-9]/g, "");
+    if (isRent) {
+      setRentPrc(Number(value));
+      return;
+    }
     setPrice(Number(value));
+  };
+
+  const handleMaintenanceFeeChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = e.target.value.replace(/[^0-9]/g, "");
+    setMaintenanceFee(Number(value));
   };
 
   if (transactionStep === 1) return <Step1 />;
@@ -78,11 +99,25 @@ export default function TransactionTypeForm() {
           <input
             className={styles.input}
             onChange={handleChange}
-            value={price}
+            value={isRent ? rentPrc : price}
             inputMode="numeric"
           />
           <div className={styles["search-button"]}>만원</div>
         </div>
+        {isRent && (
+          <>
+            <div className={styles["input-title"]}>보증금</div>
+            <div className={styles["input-wrapper"]}>
+              <input
+                className={styles.input}
+                onChange={handleMaintenanceFeeChange}
+                value={maintenanceFee}
+                inputMode="numeric"
+              />
+              <div className={styles["search-button"]}>만원</div>
+            </div>
+          </>
+        )}
       </div>
       <Button onClick={nextStep}>다음</Button>
     </div>
