@@ -20,3 +20,47 @@
   justify-content: center;
   align-items: center;
 }
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  gap: 50px;
+}
+
+.listItem-container {
+  width: 100%;
+  height: 120px;
+  border: 1px solid #d9d9d9;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.listItem-title {
+  font-weight: 700;
+  font-size: 24px;
+}
+
+.subtitle {
+  font-weight: 500;
+  font-size: 20px;
+}
+
+.list {
+  width: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.listItem-content {
+  margin-top: 10px;
+}
