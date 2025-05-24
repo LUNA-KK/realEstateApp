@@ -10,37 +10,36 @@ import { useSampleHouseList } from "@/app/store/useSampleHouseList";
 import { authFetch } from "@/app/util/authFetch";
 
 const mock = {
-  userName: "test",
+  userName: "test1",
   houseBoardDTO: {
-    pid: 13,
-    userName: "test",
-    ptitle: "메물 등록",
-    content: "정보",
-    pimg: "test.jpg",
-    views: 7,
-    createdAt: "2025-04-25T00:34:32",
+    pid: 3,
+    userName: "test1",
+    ptitle: "좋음",
+    content: "좋음",
+    pimg: "/images/61059c7e-53cf-4a65-a6f9-62d72c774874_housePicture.jpg",
+    views: 2,
+    createdAt: "2025-05-24T15:39:45",
   },
   houseInfoDTO: {
-    houseId: 8,
-    pid: 13,
-    buildingName: "name",
-    purpose: "주거용",
-    transactionType: "매매",
-    price: 100.0,
-    maintenanceFee: 100.0,
-    address: "서울 관악구 과천대로 851",
-    addressDetail: "상세주소",
-    exclusiveArea: 0.0,
-    supplyArea: 100.0,
+    houseId: 1,
+    pid: 3,
+    ownerType: "세입자",
+    purpose: "원룸",
+    transactionType: "월세",
+    price: 0,
+    maintenanceFee: 30,
+    address: "충남 천안시 동남구 병천면 가전8길 102",
+    addressDetail: "3동",
+    exclusiveArea: 20,
+    supplyArea: 100,
     rooms: 3,
     bathrooms: 2,
-    floor: 10,
     direction: "남향",
-    builtYear: "2015",
-    loanAvailable: "가능",
-    pet: "가능",
-    parking: "가능",
-    houseDetail: "정보",
+    houseDetail: "좋음",
+    rentPrc: 10,
+    parkingPerHouseholdCount: 0,
+    latitude: null,
+    longitude: null,
   },
 };
 
@@ -52,6 +51,10 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const [liked, setLiked] = useState(false);
   const [houseDetail, setHouseDetail] = useState<DetailResponse | null>(null);
   const [error, setError] = useState<any>(false);
+
+  const onClickAnalyze = () => {
+    router.push(`/main/document/analyze/${id}`);
+  };
 
   const toggleLike = (id: number) => {
     const likeInfo = JSON.parse(localStorage.getItem("liked") || "[]");
@@ -90,10 +93,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         return;
       }
       const data = await response.json();
-      if (data.houseBoardDTO.pimg) {
-        const imageUrl = `${process.env.NEXT_PUBLIC_PATH}${data.houseBoardDTO.pimg}`;
-        const imageResponse = await getImage(imageUrl);
-      }
       setHouseDetail(data);
     };
     fetchData();
@@ -107,17 +106,19 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.back}>
-        <Image
-          onClick={() => router.back()}
-          src={`${process.env.NEXT_PUBLIC_PATH}${houseDetail.houseBoardDTO.pimg}`}
-          alt="img"
-          width={20}
-          height={20}
-          unoptimized
-        />
-      </div>
-      <img className={styles.image} src="/housePicture.jpg" />
+      <img
+        className={styles.back}
+        src="/back.svg"
+        onClick={() => router.back()}
+      />
+      <img
+        className={styles.image}
+        src={
+          houseDetail.houseBoardDTO.pimg
+            ? `${process.env.NEXT_PUBLIC_PATH}${houseDetail.houseBoardDTO.pimg}`
+            : "/housePicture.jpg"
+        }
+      />
       <div className={styles.layout}>
         <div className={styles["button-wrapper"]}>
           <button onClick={() => toggleLike(Number(id))} className={styles.svg}>
@@ -148,7 +149,13 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
             거래 유형 <div>{houseDetail.houseInfoDTO.transactionType}</div>
           </div>
           <div className={styles.line}>
-            가격 <div>{houseDetail.houseInfoDTO.price}만원</div>
+            가격{" "}
+            <div>
+              {houseDetail.houseInfoDTO.transactionType === "월세"
+                ? houseDetail.houseInfoDTO.rentPrc
+                : houseDetail.houseInfoDTO.price}
+              만원
+            </div>
           </div>
           <div className={styles.line}>
             면적{" "}
@@ -170,7 +177,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
             <div>이 매물의 등기부등본을 분석했어요</div>
           </div>
         </div>
-        <Button>등기부등본 분석 보러가기</Button>
+        <Button onClick={onClickAnalyze}>등기부등본 분석 보러가기</Button>
       </div>
     </div>
   );
