@@ -12,7 +12,7 @@ interface User {
   name: string;
   phone: string;
   email: string;
-  file: File | null;
+  // file: File | null;
 }
 const initialState: User = {
   id: "",
@@ -20,7 +20,7 @@ const initialState: User = {
   name: "",
   phone: "",
   email: "",
-  file: null,
+  // file: null,
 };
 
 export default function Register() {
@@ -51,16 +51,13 @@ export default function Register() {
         userPhone: user.phone,
         userEmail: user.email,
       };
-      const formData = new FormData();
-      formData.append(
-        "data",
-        new Blob([JSON.stringify(userObject)], { type: "application/json" })
-      );
-      formData.append("userimg", user.file as Blob);
 
-      const response = await fetch("/api/auth/register", {
+      const response = await fetch(`/api/auth/register`, {
         method: "POST",
-        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userObject),
       });
 
       if (response.status === 200 || response.status === 201) {
@@ -71,6 +68,7 @@ export default function Register() {
       }
     }
   };
+  /*
   const onfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -80,6 +78,7 @@ export default function Register() {
       });
     }
   };
+  */
 
   return (
     <div className={styles.container}>
@@ -122,7 +121,6 @@ export default function Register() {
             name="email"
             placeholder="이메일을 입력해주세요. ex) test@email.com"
           />
-          <input type="file" onChange={onfileChange} />
         </div>
       </section>
       <section className={styles.bottom}>
