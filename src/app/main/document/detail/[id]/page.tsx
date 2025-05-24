@@ -3,6 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import styles from "./page.module.css";
 import { useEffect, useState } from "react";
+import Button from "@/components/Button";
 
 interface DocumentDetail {
   pid: number;
@@ -142,6 +143,7 @@ export default function DocumentDetailPage() {
     null
   );
   const [isLoading, setIsLoading] = useState(true);
+  const [isPdfOpen, setIsPdfOpen] = useState(false);
 
   useEffect(() => {
     const getDocumentDetail = async (id: string) => {
@@ -174,6 +176,20 @@ export default function DocumentDetailPage() {
 
   if (!documentDetail) {
     return <div className={styles.error}>문서 정보를 불러오지 못했어요.</div>;
+  }
+
+  if (isPdfOpen) {
+    return (
+      <div className={styles.container}>
+        <iframe
+          src={`data:application/pdf;base64,${documentDetail.pdfBase64}`}
+          width="100%"
+          height="100%"
+          style={{ border: "none" }}
+        />
+        <Button onClick={() => setIsPdfOpen(false)}>닫기</Button>
+      </div>
+    );
   }
 
   const riskKeywords = documentDetail.riskKeywords
@@ -248,21 +264,23 @@ export default function DocumentDetailPage() {
             </span>
           </div>
           {riskKeywords.length > 0 && (
-            <div
-              style={{
-                display: "flex",
-                gap: "10px",
-                flexWrap: "wrap",
-              }}
-            >
-              {riskKeywords.map((item, index) => (
-                <span key={index} className={styles.keyword}>
-                  {item}
-                </span>
-              ))}
-            </div>
+            <>
+              <div
+                style={{
+                  display: "flex",
+                  gap: "10px",
+                  flexWrap: "wrap",
+                }}
+              >
+                {riskKeywords.map((item, index) => (
+                  <span key={index} className={styles.keyword}>
+                    {item}
+                  </span>
+                ))}
+              </div>
+              <div>{response.keywordExplain}</div>
+            </>
           )}
-          <div>{response.keywordExplain}</div>
           <div className={styles.result}>
             <span>채권최고액</span>
             <span>{documentDetail.maxClaim.toLocaleString()}원</span>
@@ -276,7 +294,9 @@ export default function DocumentDetailPage() {
             <span>{documentDetail.owner}</span>
           </div>
         </div>
-        <button className={styles.button}>등기부등본 원본 보기</button>
+        <button className={styles.button} onClick={() => setIsPdfOpen(true)}>
+          등기부등본 원본 보기
+        </button>
         <div className={styles.footer}>
           본 부동산에 관한 정확한 등기부등본의 내용은 대한민국 법원 인터넷
           등기소 사이트(https://www.iros.go.kr/index.jsp) 등을 통해 확인하실 수
