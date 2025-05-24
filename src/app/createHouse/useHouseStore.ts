@@ -21,6 +21,11 @@ export interface HouseStore {
   purpose: string;
   userType: string;
   imageFile: File | null;
+  rentPrc: number;
+  parkingPerHouseholdCount?: number;
+  maintenanceFee?: number;
+  setMaintenanceFee: (value: number) => void;
+  setParkingPerHouseholdCount: (value: number) => void;
   setImageFile: (value: File) => void;
   setTransactionType: (value: string) => void;
   setPrice: (value: number) => void;
@@ -31,6 +36,7 @@ export interface HouseStore {
   setPurpose: (value: string) => void;
   setUserType: (value: string) => void;
   resetHouseStore: () => void;
+  setRentPrc: (value: number) => void;
 }
 
 export const useHouseStore = create<HouseStore>()((set) => ({
@@ -43,6 +49,13 @@ export const useHouseStore = create<HouseStore>()((set) => ({
   purpose: "",
   userType: "",
   imageFile: null,
+  rentPrc: 0,
+  parkingPerHouseholdCount: 0,
+  maintenanceFee: 0,
+  setMaintenanceFee: (value: number) => set(() => ({ maintenanceFee: value })),
+  setParkingPerHouseholdCount: (value: number) =>
+    set(() => ({ parkingPerHouseholdCount: value })),
+  setRentPrc: (value: number) => set(() => ({ rentPrc: value })),
   setTransactionType: (value: string) =>
     set(() => ({ transactionType: value })),
   setPrice: (value: number) => set(() => ({ price: value })),
