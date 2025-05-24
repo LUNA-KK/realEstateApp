@@ -1,14 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest, { params }: any) {
+export async function POST(req: NextRequest) {
   const token = req.headers.get("authorization") ?? "";
-  const { id } = await params;
+  const searchParams = req.nextUrl.searchParams;
+  const id = searchParams.get("id");
+  const body = req.json();
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_PATH}/analysis/${id}`,
+    `${process.env.NEXT_PUBLIC_API_PATH}/house-board/${id}/analyze`,
     {
-      method: "GET",
+      method: "POST",
       headers: { "Content-Type": "application/json", Authorization: token },
+      body: JSON.stringify(body),
     }
   );
 
