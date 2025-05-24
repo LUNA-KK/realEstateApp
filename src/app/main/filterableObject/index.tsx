@@ -5,6 +5,22 @@ import RecommendCard from "../recommendCard";
 import styles from "./index.module.css";
 import { authFetch } from "@/app/util/authFetch";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { CircularProgress } from "@mui/material";
+
+const mock = {
+  pid: 3,
+  ptitle: "좋음",
+  houseType: "원룸",
+  transactionType: "월세",
+  price: 0,
+  rentPrc: 10,
+  exclusiveArea: 20,
+  address: "충남 천안시 동남구 병천면 가전8길 102",
+  views: 2,
+  writerName: "test1",
+};
+
+type APIResponse = typeof mock;
 
 interface Response {
   address: string;
@@ -22,9 +38,13 @@ interface Response {
 export default function FilterableObject() {
   const pageNumber = useRef(0);
   const targetDiv = useRef<HTMLDivElement>(null);
-  const [data, setData] = useState<Response[]>([]);
+  const [data, setData] = useState<APIResponse[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const trigger = useRef(true);
 
   const fetchData = useCallback(async () => {
+    if (isLoading || !trigger.current) return;
+    setIsLoading(true);
     const response = await authFetch({
       url: `/api/house-board/create?page=${pageNumber.current}`,
     });
@@ -32,6 +52,10 @@ export default function FilterableObject() {
       throw new Error("Network response was not ok");
     }
     const data = await response.json();
+    if (data.last || data.content.length === 0) {
+      trigger.current = false;
+    }
+    setIsLoading(false);
     pageNumber.current += 1;
     setData((prev) => [...prev, ...data.content]);
   }, []);
@@ -72,12 +96,14 @@ export default function FilterableObject() {
             houseid={data.pid}
             type={data.houseType}
             transactionType={data.transactionType}
-            price={data.price}
+            price={data.transactionType === "월세" ? data.rentPrc : data.price}
             area={`${data.exclusiveArea}m²`}
-            floor={`${data.floor}층`}
             location={data.address}
           />
         ))}
+        <div className={styles.loading}>
+          {isLoading && <CircularProgress />}
+        </div>
       </div>
       <div ref={targetDiv} />
     </div>
