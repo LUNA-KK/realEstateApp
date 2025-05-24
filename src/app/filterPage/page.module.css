@@ -61,3 +61,34 @@
   display: flex;
   justify-content: center;
 }
+
+.region-item {
+  cursor: pointer;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.region-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  height: 200px;
+  overflow-y: auto;
+
+  &:nth-child(n) {
+    border-right: 1px solid #d9d9d9;
+  }
+
+  &:last-child {
+    border-right: none;
+  }
+}
+
+.region-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border: 1px solid #d9d9d9;
+  overflow: hidden;
+  border-radius: 8px;
+}
