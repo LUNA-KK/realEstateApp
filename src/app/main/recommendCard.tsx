@@ -56,6 +56,17 @@ export default function RecommendCard({
     }
   }, []);
 
+  const formatPrice = (price: number) => {
+    if (price >= 10000) {
+      let base = `${(price / 10000).toFixed()}억`;
+      if (price % 10000 === 0) {
+        return base;
+      }
+      return `${(price / 10000).toFixed()}억 ${price % 10000}만원`;
+    }
+    return `${price}만원`;
+  };
+
   return (
     <Link
       href={`/houseDetail/${houseid}`}
@@ -68,7 +79,7 @@ export default function RecommendCard({
       <div className={styles.content}>
         <div>{type}</div>
         <div>
-          {transactionType} / {price}만원
+          {transactionType} / {formatPrice(price)}
         </div>
         <div>{area}</div>
         <div>{location}</div>

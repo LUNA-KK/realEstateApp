@@ -102,6 +102,10 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         if (!res.houseBoardDTO.pimg) {
           throw new Error("이미지 없음");
         }
+        if (res.houseBoardDTO.pimg.startsWith("https")) {
+          setImage(res.houseBoardDTO.pimg);
+          throw new Error("자체 이미지");
+        }
         return getImage(res.houseBoardDTO.pimg);
       })
       .then((res) => {
