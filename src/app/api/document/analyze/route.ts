@@ -4,7 +4,7 @@ export async function POST(req: NextRequest) {
   const token = req.headers.get("authorization") ?? "";
   const searchParams = req.nextUrl.searchParams;
   const id = searchParams.get("id");
-  const body = req.json();
+  const body = await req.json();
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_PATH}/house-board/${id}/analyze`,

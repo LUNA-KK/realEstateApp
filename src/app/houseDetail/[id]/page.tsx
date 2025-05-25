@@ -99,6 +99,9 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     };
     fetchData()
       .then((res) => {
+        if (!res.houseBoardDTO.pimg) {
+          throw new Error("이미지 없음");
+        }
         return getImage(res.houseBoardDTO.pimg);
       })
       .then((res) => {
@@ -106,7 +109,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       })
       .then((res) => {
         setImage(URL.createObjectURL(res));
-      });
+      })
+      .catch((error) => console.error("이미지 없음"));
   }, []);
 
   if (error) {
