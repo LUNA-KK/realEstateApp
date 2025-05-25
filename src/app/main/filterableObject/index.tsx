@@ -18,6 +18,7 @@ const mock = {
   address: "충남 천안시 동남구 병천면 가전8길 102",
   views: 2,
   writerName: "test1",
+  pimg: "",
 };
 
 type APIResponse = typeof mock;
@@ -47,6 +48,7 @@ export default function FilterableObject() {
     setIsLoading(true);
     const response = await authFetch({
       url: `/api/house-board/create?page=${pageNumber.current}`,
+      // url: `${process.env.NEXT_PUBLIC_API_PATH}/house-board/list?page=${pageNumber.current}`,
     });
     if (!response.ok) {
       throw new Error("Network response was not ok");
@@ -99,6 +101,7 @@ export default function FilterableObject() {
             price={data.transactionType === "월세" ? data.rentPrc : data.price}
             area={`${data.exclusiveArea}m²`}
             location={data.address}
+            src={data.pimg}
           />
         ))}
         <div className={styles.loading}>

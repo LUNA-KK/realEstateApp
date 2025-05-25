@@ -12,6 +12,7 @@ interface RecommendCardProps {
   area: string;
   location: string;
   isFavorite?: boolean;
+  src?: string;
 }
 
 export default function RecommendCard({
@@ -21,6 +22,7 @@ export default function RecommendCard({
   price,
   area,
   location,
+  src,
 }: RecommendCardProps) {
   const [liked, setLiked] = useState(false);
   const [show, setShow] = useState(false);
@@ -60,7 +62,9 @@ export default function RecommendCard({
       className={styles.container}
       ref={ref}
     >
-      {show && <img src="/housePicture.jpg" className={styles.image} />}
+      {show && (
+        <img src={src || "/housePicture.jpg"} className={styles.image} />
+      )}
       <div className={styles.content}>
         <div>{type}</div>
         <div>
