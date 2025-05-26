@@ -40,6 +40,7 @@ export default function Login() {
       if (response.status === 200) {
         sessionStorage.setItem("accessToken", data.accessToken);
         sessionStorage.setItem("refreshToken", data.refreshToken);
+        sessionStorage.setItem("userId", user.id);
         alert("로그인 성공");
         router.push("/main");
       } else {

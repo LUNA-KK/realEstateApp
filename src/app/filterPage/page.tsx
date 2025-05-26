@@ -187,9 +187,22 @@ const FilterRegion = ({ title }: RegionProps) => {
 const type = ["원룸", "빌라", "오피스텔", "아파트", "상가", "기타"];
 const transactionType = ["월세", "전세", "매매"];
 
-const FilterArea = ({ title, target }: { title: string; target: string[] }) => {
+const FilterArea = ({
+  title,
+  target,
+  isTrans = false,
+}: {
+  title: string;
+  target: string[];
+  isTrans?: boolean;
+}) => {
   const [isSelected, setIsSelected] = useState<string | undefined>();
+  const { setType } = useRegionCode();
   const onclick = (type: string) => {
+    if (isTrans) {
+      const number = type === "매매" ? 1 : type === "전세" ? 2 : 3;
+      setType(number);
+    }
     if (isSelected === type) {
       setIsSelected(undefined);
       return;
@@ -311,7 +324,7 @@ export default function FilterPage() {
       <div />
       <FilterRegion title={"지역"} />
       <div className={styles.divider} />
-      <FilterArea title={"거래 방식"} target={transactionType} />
+      <FilterArea title={"거래 방식"} target={transactionType} isTrans />
       <div className={styles.divider} />
       <FilterArea title={"매물 종류"} target={type} />
       <div className={styles.divider} />
