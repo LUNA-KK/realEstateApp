@@ -17,9 +17,10 @@ export default function Main() {
         <Image src="/marker-main.svg" alt="marker 1" width={20} height={20} />
         지도로 보기
       </Button>
+      <FilterButtons />
       <Recommend />
       <div className={styles.divider} />
-      <FilterButtons />
+
       <FilterableObject />
 
       <div className={styles.space} />

@@ -100,7 +100,7 @@ export default function Recommend() {
 
   return (
     <div>
-      <p>추천 매물</p>
+      <p style={{ marginTop: "0" }}>추천 매물</p>
       <div className={styles.container}>
         {data.map((data) => (
           <RecommendCard
