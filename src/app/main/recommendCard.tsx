@@ -3,6 +3,7 @@
 import styles from "./recommendCard.module.css";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { authFetch } from "../util/authFetch";
 
 interface RecommendCardProps {
   houseid: number;
@@ -13,6 +14,7 @@ interface RecommendCardProps {
   location: string;
   isFavorite?: boolean;
   src?: string;
+  liked?: boolean;
 }
 
 export default function RecommendCard({
@@ -23,31 +25,23 @@ export default function RecommendCard({
   area,
   location,
   src,
+  liked,
 }: RecommendCardProps) {
-  const [liked, setLiked] = useState(false);
   const [show, setShow] = useState(false);
+  const [isLiked, setIsLiked] = useState(liked || false);
   const ref = useRef<HTMLAnchorElement>(null);
 
-  const toggleLike = (id: number) => {
-    const likeInfo = JSON.parse(localStorage.getItem("liked") || "[]");
-    if (likeInfo.includes(id)) {
-      localStorage.setItem(
-        "liked",
-        JSON.stringify(likeInfo.filter((item: number) => item !== id))
-      );
-      setLiked(!liked);
-      return;
-    }
-    localStorage.setItem("liked", JSON.stringify([...likeInfo, id]));
-    setLiked(!liked);
+  const toggleLike = async (id: number) => {
+    await authFetch({
+      // url: `${process.env.NEXT_PUBLIC_API_PATH}/wishlist/${id}/toggle`,
+      url: `/api/wish?id=${id}`,
+      method: "POST",
+    });
+
+    setIsLiked((prev) => !prev);
   };
 
   useEffect(() => {
-    const likeInfo = JSON.parse(localStorage.getItem("liked") || "[]");
-    if (likeInfo.includes(houseid)) {
-      setLiked(true);
-    }
-
     if (ref.current) {
       const { width } = ref.current.getBoundingClientRect();
       if (width > 300) {
@@ -82,7 +76,7 @@ export default function RecommendCard({
           {transactionType} / {formatPrice(price)}
         </div>
         <div>{area}</div>
-        <div>{location}</div>
+        <div style={{ whiteSpace: "pre-wrap" }}>{location}</div>
       </div>
       <div className={styles.like}>
         <button
@@ -95,7 +89,7 @@ export default function RecommendCard({
             width="20"
             height="20"
             viewBox="0 0 24 24"
-            fill={liked ? "red" : "none"}
+            fill={isLiked ? "red" : "none"}
             stroke="black"
             strokeWidth="2"
             strokeLinecap="round"
