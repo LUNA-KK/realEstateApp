@@ -7,6 +7,31 @@ import { authFetch } from "@/app/util/authFetch";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CircularProgress } from "@mui/material";
 
+// 디바운스 함수 (간단한 버전)
+function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
+  let timeout: ReturnType<typeof setTimeout> | null = null;
+
+  const debounced = (...args: Parameters<F>) => {
+    if (timeout !== null) {
+      clearTimeout(timeout);
+      timeout = null;
+    }
+    timeout = setTimeout(() => func(...args), waitFor);
+  };
+
+  return debounced as (...args: Parameters<F>) => ReturnType<F>;
+}
+
+interface WishlistItem {
+  pid: number;
+  userId: string;
+  ptitle: string;
+  content: string;
+  pimg: string;
+  views: number;
+  createdAt: string;
+}
+
 const mock = {
   pid: 3,
   ptitle: "좋음",
@@ -40,6 +65,7 @@ export default function FilterableObject() {
   const pageNumber = useRef(0);
   const targetDiv = useRef<HTMLDivElement>(null);
   const [data, setData] = useState<APIResponse[]>([]);
+  const [wishList, setWishList] = useState<WishlistItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const trigger = useRef(true);
 
@@ -62,10 +88,29 @@ export default function FilterableObject() {
     setData((prev) => [...prev, ...data.content]);
   }, []);
 
+  const getWishList = useCallback(async () => {
+    const uid = sessionStorage.getItem("userId");
+    if (!uid) return;
+    const response = await authFetch({
+      url: `/api/wish/list`,
+    });
+    if (!response.ok) {
+      throw new Error("Failed to fetch wishlist");
+    }
+    const wishList = await response.json();
+    setWishList(wishList);
+  }, []);
+
   useEffect(() => {
+    const fetchSeq = async () => {
+      await fetchData();
+      await getWishList();
+    };
+
+    const debouncedFetchData = debounce(fetchSeq, 300);
     const observer = new IntersectionObserver(
       () => {
-        fetchData();
+        debouncedFetchData();
       },
       {
         root: null,
@@ -102,6 +147,7 @@ export default function FilterableObject() {
             area={`${data.exclusiveArea}m²`}
             location={data.address}
             src={data.pimg}
+            liked={wishList.some((item) => item.pid === data.pid)}
           />
         ))}
         <div className={styles.loading}>
