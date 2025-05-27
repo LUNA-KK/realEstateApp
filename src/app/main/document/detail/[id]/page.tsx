@@ -19,6 +19,27 @@ interface DocumentDetail {
   riskDetails: any;
 }
 
+const dangerMock: DocumentDetail = {
+  pid: 1,
+  userid: "user1",
+  owner: "소유자1",
+  issueDate: "2025-05-28T12:00:00Z",
+  riskLevel: "위험",
+  riskKeywords: "위험, 주의",
+  mainWarnings:
+    "집이 법적 압류 상태예요. - 채권자가 소송이나 빚 문제로 이 집에 대해 가압류를 걸어둔 상태예요. 계약 전 주의가 필요해요. / 소유권 변동 가능성이 있어요. - 집주인 또는 전문가와 소유권 변동에 대한 확인이 필요해요. / 매물을 담보로 받은 융자금이 있어요. - 채권최고액과 보증금의 합이 시세의 70% 이하일 때 안전하다고 판단할 수 있어요.",
+  maxClaim: 1000000,
+  protectedAmount: 500000,
+  pdfBase64: "base64string",
+  riskDetails: {
+    riskLevel: "위험",
+    riskKeywords: "위험, 주의",
+    mainWarnings: ["위험 경고"],
+    maxClaim: 1000000,
+    protectedAmount: 500000,
+  },
+};
+
 type Status = string;
 
 const DangerIcon = () => {
@@ -172,6 +193,131 @@ export default function DocumentDetailPage() {
 
   if (isLoading) {
     return null;
+  }
+
+  if (id === "mock") {
+    const data = dangerMock;
+
+    let mockriskKeywords;
+    let mockriskKeywordCount;
+    let mockexplainTextObj;
+
+    mockriskKeywords = data.riskKeywords
+      .split(",")
+      .map((keyword) => keyword.trim());
+    mockriskKeywordCount = mockriskKeywords.length;
+
+    mockexplainTextObj = data.mainWarnings.split("/").map((text) => {
+      const splitText = text.split("-");
+
+      return {
+        text: splitText[0].trim(),
+        sub: splitText[1].trim(),
+      };
+    });
+
+    return (
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <div className={styles.title}>문서 분석</div>
+          <button
+            className={styles.close}
+            onClick={() => router.push("/main/document")}
+          >
+            <svg
+              width="33"
+              height="24"
+              viewBox="0 0 33 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M26.5101 3.8701L24.7301 2.1001L14.8401 12.0001L24.7401 21.9001L26.5101 20.1301L18.3801 12.0001L26.5101 3.8701Z"
+                fill="black"
+              />
+              <path
+                d="M6.48991 3.8701L8.26991 2.1001L18.1599 12.0001L8.25991 21.9001L6.48991 20.1301L14.6199 12.0001L6.48991 3.8701Z"
+                fill="black"
+              />
+            </svg>
+          </button>
+        </div>
+        <div className={styles.content}>
+          <StatusTitle code={data.riskLevel} />
+          <div>
+            등기부등본 발급일자 :{" "}
+            {new Date(data.issueDate).toLocaleString("ko-KR")}
+          </div>
+          {mockexplainTextObj && (
+            <div className={styles.explain}>
+              {mockexplainTextObj &&
+                mockexplainTextObj.map((item, index) => (
+                  <StatusText
+                    text={item.text}
+                    code={"danger"}
+                    key={index}
+                    sub={item.sub}
+                  />
+                ))}
+            </div>
+          )}
+          <div className={styles.divider} />
+
+          <div className={styles.content}>
+            <div className={styles.result}>
+              <span>위험 키워드</span>
+              <span>
+                {mockriskKeywordCount === 0 || !mockriskKeywordCount
+                  ? "없음"
+                  : `${mockriskKeywordCount}개`}
+              </span>
+            </div>
+            {mockriskKeywords && mockriskKeywords.length > 0 && (
+              <>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "10px",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {mockriskKeywords.map((item, index) => (
+                    <span key={index} className={styles.keyword}>
+                      {item}
+                    </span>
+                  ))}
+                </div>
+                <div>{response.keywordExplain}</div>
+              </>
+            )}
+            <div className={styles.result}>
+              <span>채권최고액</span>
+              <span>{data.maxClaim.toLocaleString()}원</span>
+            </div>
+            <div className={styles.result}>
+              <span>보호받을 수 있는 보증금</span>
+              <span>{data.protectedAmount.toLocaleString()}원</span>
+            </div>
+            <div className={styles.result}>
+              <span>소유주</span>
+              <span>{data.owner}</span>
+            </div>
+          </div>
+          <button className={styles.button} onClick={() => setIsPdfOpen(true)}>
+            등기부등본 원본 보기
+          </button>
+          <div className={styles.footer}>
+            본 부동산에 관한 정확한 등기부등본의 내용은 대한민국 법원 인터넷
+            등기소 사이트(https://www.iros.go.kr/index.jsp) 등을 통해 확인하실
+            수 있습니다. 본 서비스에서 제공하는 분석 결과는 참고용으로 제공되며,
+            그 내용과 사실이 다르거나 변경될 사항이 있을 수 있습니다. 본 부동산
+            권리분석 결과의 활용에 대한 책임은 이용자 본인에게 있습니다. 해당
+            서비스는 공인중개법상 공인중개사에 해당하지 않으며, 제공하는 모든
+            정보 및 서비스는 공인중개사법 상 의무와 무관합니다.
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (!documentDetail) {

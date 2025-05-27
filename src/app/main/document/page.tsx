@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 const docs: string[] = [];
 
 interface DocumentListItem {
-  id: number;
+  id: string | number;
   pid: number;
   userid: string;
   owner: string;
@@ -26,12 +26,35 @@ interface DocumentListItem {
 }
 
 interface DocumentListItemProps {
-  id: number;
+  id: string | number;
   riskLevel: string;
   issueDate: string;
   purpose: string;
   transactionType: string;
 }
+
+const dangerMock: DocumentListItem = {
+  id: "mock",
+  pid: 1,
+  userid: "user1",
+  owner: "소유자1",
+  issueDate: "2025-05-28T12:00:00Z",
+  riskLevel: "위험",
+  riskKeywords: "위험, 주의",
+  mainWarnings: "위험 경고",
+  maxClaim: 1000000,
+  protectedAmount: 500000,
+  pdfBase64: "base64string",
+  riskDetails: {
+    riskLevel: "위험",
+    riskKeywords: "위험, 주의",
+    mainWarnings: ["위험 경고"],
+    maxClaim: 1000000,
+    protectedAmount: 500000,
+  },
+  transactionType: "매매",
+  purpose: "거주용",
+};
 
 const ListItem = ({
   id,
@@ -72,7 +95,7 @@ const ListItem = ({
 };
 
 export default function DocumentPage() {
-  const [list, setList] = useState<DocumentListItem[]>([]);
+  const [list, setList] = useState<DocumentListItem[]>([dangerMock]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -88,7 +111,7 @@ export default function DocumentPage() {
           throw new Error("문서 목록을 가져오는 데 실패했습니다.");
         }
         const data = await response.json();
-        setList(data);
+        setList((prev) => [...prev, ...data]);
       } catch (error) {
         console.error("문서 목록을 가져오는 중 오류 발생:", error);
       } finally {
