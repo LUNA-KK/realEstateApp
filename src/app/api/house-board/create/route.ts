@@ -10,13 +10,14 @@ export async function GET(req: NextRequest) {
   const maxRentPrce = searchParams.get("maxRentPrce") ?? "500";
   const transactionType = searchParams.get("transactionType") ?? "";
   const purpose = searchParams.get("purpose") ?? "";
+  const code = searchParams.get("code") ?? "";
 
   const response = await fetch(
     `${
       process.env.NEXT_PUBLIC_API_PATH
     }/house-board/list?page=${page}&maxPrice=${maxPrice}&maxRentPrce=${maxRentPrce}&${
       transactionType ? `transactionType=${transactionType}` : ""
-    }&${purpose ? `purpose=${purpose}` : ""}`,
+    }&${purpose ? `purpose=${purpose}` : ""}&${code ? `addrCode=${code}` : ""}`,
     {
       method: "GET",
       headers: {

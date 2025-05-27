@@ -7,6 +7,7 @@ import { useEffect, useRef, useState, useMemo } from "react";
 import Script from "next/script";
 import { useRouter } from "next/navigation";
 import { authFetch } from "../util/authFetch";
+import useRegionCode from "../store/useRegionCode";
 
 const center = {
   lat: 36.763,
@@ -66,6 +67,7 @@ const MarkerList = ({
 }) => {
   const [position, setPosition] = useState<RecommnedPosition>(samplePostion);
   const router = useRouter();
+  const { code } = useRegionCode();
 
   useEffect(() => {
     // geocoder가 준비되면 한 번만 실행
@@ -100,7 +102,7 @@ const MarkerList = ({
         const allList = await Promise.all(
           Array.from({ length: 20 }, (_, i) =>
             authFetch({
-              url: `/api/house-board/create?page=${i}`,
+              url: `/api/house-board/create?page=${i}&addrCode=${code}`,
             })
           )
         );

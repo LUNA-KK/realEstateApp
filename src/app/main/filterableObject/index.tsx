@@ -6,6 +6,7 @@ import { authFetch } from "@/app/util/authFetch";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CircularProgress } from "@mui/material";
 import useFileterStore from "@/app/store/useFilterStore";
+import useRegionCode from "@/app/store/useRegionCode";
 
 // 디바운스 함수 (간단한 버전)
 function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
@@ -69,21 +70,29 @@ export default function FilterableObject() {
   const [isLoading, setIsLoading] = useState(false);
   const trigger = useRef(true);
   const { transactionType, purpose, maxPrice, maxRentPrce } = useFileterStore();
+  const { code } = useRegionCode();
 
   const fetchData = useCallback(async () => {
     if (isLoading || !trigger.current) return;
     setIsLoading(true);
+    await authFetch({
+      // url: `${process.env.NEXT_PUBLIC_API_PATH}/addrCode/crawl?code=${code}`,
+      url: `/api/house-board/crawl?code=${code}`,
+    });
+
     const response = await authFetch({
       url: `/api/house-board/create?page=${
         pageNumber.current
-      }&maxPrice=${maxPrice}&maxRentPrce=${maxRentPrce}&${
+      }&maxPrice=${maxPrice}&maxRentPrc=${maxRentPrce}&${
         transactionType ? `transactionType=${transactionType}` : ""
-      }&${purpose ? `purpose=${purpose}` : ""}`,
+      }&${purpose ? `purpose=${purpose}` : ""}&${
+        code ? `addrCode=${code}` : ""
+      }`,
       /*url: `${process.env.NEXT_PUBLIC_API_PATH}/house-board/list?page=${
         pageNumber.current
       }&maxPrice=${maxPrice}&maxRentPrce=${maxRentPrce}&${
         transactionType ? `transactionType=${transactionType}` : ""
-      }&${purpose ? `purpose=${purpose}` : ""}`,*/
+      }&${purpose ? `purpose=${purpose}` : ""&${code ? `addrCode=${code}` : ""}`,*/
     });
     if (!response.ok) {
       throw new Error("Network response was not ok");
