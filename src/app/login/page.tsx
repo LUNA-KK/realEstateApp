@@ -74,7 +74,7 @@ export default function Login() {
         </div>
       </section>
       <section className={styles.bottom}>
-        <Button onClick={submit}>로그인 하기</Button>
+        <Button onClick={submit}>로그인하기</Button>
       </section>
     </div>
   );
