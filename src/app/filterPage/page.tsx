@@ -52,7 +52,7 @@ const RegionItem = ({
 
 const getNextCode = async (code: string) => {
   const resposne = await authFetch({
-    url: `/api/house-board/addrCode?code=${code}`,
+    url: `/api/house-board/getNextAddr/?code=${code}`,
   });
   if (!resposne.ok) {
     throw new Error("Failed to fetch next code");
