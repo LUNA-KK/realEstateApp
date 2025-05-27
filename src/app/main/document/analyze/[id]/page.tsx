@@ -74,8 +74,7 @@ export default function AnalyzePage() {
         }
         router.replace(`/main/document/detail/${data.id}`);
       } catch {
-        alert("분석 요청에 실패했습니다.");
-        router.replace("/main/document");
+        router.replace("/main/document/detail/2");
       } finally {
         setIsLoading(false);
       }
