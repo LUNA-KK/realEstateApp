@@ -112,7 +112,7 @@ const FilterRegion = ({ title }: RegionProps) => {
     sectList,
     setSectList,
   } = useRegionStore();
-  const { setCode } = useRegionCode();
+  const { setCode, setRegionName } = useRegionCode();
   const { selected, setSelected } = useSelectRegion();
 
   const cityClick = async (code: string) => {
@@ -175,7 +175,10 @@ const FilterRegion = ({ title }: RegionProps) => {
             <RegionItem
               name={item.cortar_name}
               code={item.cortar_no}
-              onClick={sectClick}
+              onClick={(code) => {
+                setRegionName(item.cortar_name);
+                sectClick(code);
+              }}
               isClicked={selected.sect === item.cortar_no}
             />
           ))}
@@ -199,9 +202,12 @@ const FilterArea = ({
   isTrans?: boolean;
   isPurpose?: boolean;
 }) => {
-  const [isSelected, setIsSelected] = useState<string | undefined>();
+  const { setPurpose, setTransactionType, purpose, transactionType } =
+    useFileterStore();
+  const [isSelected, setIsSelected] = useState<string | undefined>(
+    isPurpose ? purpose : transactionType
+  );
   const { setType } = useRegionCode();
-  const { setPurpose, setTransactionType } = useFileterStore();
 
   const onclick = (type: string) => {
     if (isTrans) {
@@ -220,6 +226,7 @@ const FilterArea = ({
       setPurpose(type);
       if (isSelected === type) {
         setIsSelected(undefined);
+        setPurpose("");
         return;
       }
     }
@@ -255,14 +262,17 @@ const priceType = [
   {
     name: "보증금",
     endLabel: "20억원 이상",
+    key: "",
   },
   {
     name: "월세",
     endLabel: "500만원 이상",
+    key: "maxRentPrc",
   },
   {
     name: "매매",
     endLabel: "20억원 이상",
+    key: "maxPrice",
   },
 ];
 
@@ -276,15 +286,23 @@ const area = [
 interface Target {
   name: string;
   endLabel: string;
+  key?: string;
 }
 
 const FilterWithSlider = ({
   title,
   endLabel,
+  type = "",
 }: {
   title: string;
   endLabel: string;
+  type?: string;
 }) => {
+  const { setMaxPrice, setMaxRentPrice, maxPrice, maxRentPrce } =
+    useFileterStore();
+
+  console.log("maxPrice", maxPrice);
+  console.log("maxRentPrce", maxRentPrce);
   const mark = [
     {
       value: 0,
@@ -295,6 +313,18 @@ const FilterWithSlider = ({
       label: endLabel,
     },
   ];
+
+  const handleChange = (e: Event, value: any) => {
+    if (type === "maxRentPrc") {
+      // Handle max rent price change
+
+      setMaxRentPrice((500 * value) / 100);
+    } else if (type === "maxPrice") {
+      // Handle max price change
+
+      setMaxPrice((2000 * value) / 100);
+    }
+  };
   return (
     <div>
       <div className={styles.title}>{title}</div>
@@ -318,6 +348,7 @@ const FilterWithSlider = ({
                 backgroundColor: "#fff",
               },
             }}
+            onChange={handleChange}
           />
         </div>
       </div>
@@ -325,7 +356,26 @@ const FilterWithSlider = ({
   );
 };
 
-const FilterTargetWithSlider = ({ target }: { target: Target[] }) => {
+const FilterTargetWithSliderPrice = ({ target }: { target: Target[] }) => {
+  return (
+    <div className={styles["filter-container"]}>
+      {target.map((item) => (
+        <FilterWithSlider
+          title={item.name}
+          endLabel={item.endLabel}
+          key={item.key}
+          type={item.key}
+        />
+      ))}
+    </div>
+  );
+};
+
+interface Target2 {
+  name: string;
+  endLabel: string;
+}
+const FilterTargetWithSlider = ({ target }: { target: Target2[] }) => {
   return (
     <div className={styles["filter-container"]}>
       {target.map((item) => (
@@ -349,7 +399,7 @@ export default function FilterPage() {
       <div className={styles.divider} />
       <FilterArea title={"매물 종류"} target={type} isPurpose />
       <div className={styles.divider} />
-      <FilterTargetWithSlider target={priceType} />
+      <FilterTargetWithSliderPrice target={priceType} />
       <div className={styles.divider} />
       <FilterTargetWithSlider target={area} />
     </div>
