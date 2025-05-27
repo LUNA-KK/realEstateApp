@@ -22,21 +22,21 @@ interface DocumentDetail {
 const dangerMock: DocumentDetail = {
   pid: 1,
   userid: "user1",
-  owner: "소유자1",
+  owner: "박미정",
   issueDate: "2025-05-28T12:00:00Z",
   riskLevel: "위험",
   riskKeywords: "위험, 주의",
   mainWarnings:
     "집이 법적 압류 상태예요. - 채권자가 소송이나 빚 문제로 이 집에 대해 가압류를 걸어둔 상태예요. 계약 전 주의가 필요해요. / 소유권 변동 가능성이 있어요. - 집주인 또는 전문가와 소유권 변동에 대한 확인이 필요해요. / 매물을 담보로 받은 융자금이 있어요. - 채권최고액과 보증금의 합이 시세의 70% 이하일 때 안전하다고 판단할 수 있어요.",
-  maxClaim: 1000000,
-  protectedAmount: 500000,
-  pdfBase64: "base64string",
+  maxClaim: 88000000,
+  protectedAmount: 30000000,
+  pdfBase64: "pdf",
   riskDetails: {
     riskLevel: "위험",
     riskKeywords: "위험, 주의",
     mainWarnings: ["위험 경고"],
-    maxClaim: 1000000,
-    protectedAmount: 500000,
+    maxClaim: 70000000,
+    protectedAmount: 5500,
   },
 };
 
@@ -165,6 +165,7 @@ export default function DocumentDetailPage() {
   );
   const [isLoading, setIsLoading] = useState(true);
   const [isPdfOpen, setIsPdfOpen] = useState(false);
+  const [isOpenMockPdf, setIsOpenMockPdf] = useState(false);
 
   useEffect(() => {
     const getDocumentDetail = async (id: string) => {
@@ -193,6 +194,20 @@ export default function DocumentDetailPage() {
 
   if (isLoading) {
     return null;
+  }
+
+  if (isOpenMockPdf) {
+    return (
+      <div className={styles.container}>
+        <iframe
+          src={`data:application/pdf;base64,${dangerMock.pdfBase64}`}
+          width="100%"
+          height="100%"
+          style={{ border: "none" }}
+        />
+        <Button onClick={() => setIsOpenMockPdf(false)}>닫기</Button>
+      </div>
+    );
   }
 
   if (id === "mock") {
@@ -296,14 +311,17 @@ export default function DocumentDetailPage() {
             </div>
             <div className={styles.result}>
               <span>보호받을 수 있는 보증금</span>
-              <span>{data.protectedAmount.toLocaleString()}원</span>
+              <span>최대 {data.protectedAmount.toLocaleString()}원</span>
             </div>
             <div className={styles.result}>
               <span>소유주</span>
               <span>{data.owner}</span>
             </div>
           </div>
-          <button className={styles.button} onClick={() => setIsPdfOpen(true)}>
+          <button
+            className={styles.button}
+            onClick={() => setIsOpenMockPdf(true)}
+          >
             등기부등본 원본 보기
           </button>
           <div className={styles.footer}>
@@ -464,7 +482,9 @@ export default function DocumentDetailPage() {
           </div>
           <div className={styles.result}>
             <span>보호받을 수 있는 보증금</span>
-            <span>{documentDetail.protectedAmount.toLocaleString()}원</span>
+            <span>
+              최대 {documentDetail.protectedAmount.toLocaleString()}원
+            </span>
           </div>
           <div className={styles.result}>
             <span>소유주</span>
