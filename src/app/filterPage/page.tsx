@@ -301,18 +301,7 @@ const FilterWithSlider = ({
   const { setMaxPrice, setMaxRentPrice, maxPrice, maxRentPrce } =
     useFileterStore();
 
-  console.log("maxPrice", maxPrice);
-  console.log("maxRentPrce", maxRentPrce);
-  const mark = [
-    {
-      value: 0,
-      label: "0만원",
-    },
-    {
-      value: 100,
-      label: endLabel,
-    },
-  ];
+  const s = endLabel === "20억원 이상" ? 2000 : 500;
 
   const handleChange = (e: Event, value: any) => {
     if (type === "maxRentPrc") {
@@ -325,6 +314,17 @@ const FilterWithSlider = ({
       setMaxPrice((2000 * value) / 100);
     }
   };
+  const mark = [
+    {
+      value: 0,
+      label: "0만원",
+    },
+    {
+      value: 100,
+      label: endLabel,
+    },
+  ];
+
   return (
     <div>
       <div className={styles.title}>{title}</div>
@@ -334,6 +334,8 @@ const FilterWithSlider = ({
             className={styles.slider}
             aria-label="Default"
             valueLabelDisplay="auto"
+            valueLabelFormat={(value) => `${(value * s) / 100}`}
+            step={10}
             marks={mark}
             defaultValue={100}
             sx={{
