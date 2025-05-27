@@ -74,12 +74,16 @@ export default function FilterableObject() {
     if (isLoading || !trigger.current) return;
     setIsLoading(true);
     const response = await authFetch({
-      // url: `/api/house-board/create?page=${pageNumber.current}`,
-      url: `${process.env.NEXT_PUBLIC_API_PATH}/house-board/list?page=${
+      url: `/api/house-board/create?page=${
         pageNumber.current
       }&maxPrice=${maxPrice}&maxRentPrce=${maxRentPrce}&${
         transactionType ? `transactionType=${transactionType}` : ""
       }&${purpose ? `purpose=${purpose}` : ""}`,
+      /*url: `${process.env.NEXT_PUBLIC_API_PATH}/house-board/list?page=${
+        pageNumber.current
+      }&maxPrice=${maxPrice}&maxRentPrce=${maxRentPrce}&${
+        transactionType ? `transactionType=${transactionType}` : ""
+      }&${purpose ? `purpose=${purpose}` : ""}`,*/
     });
     if (!response.ok) {
       throw new Error("Network response was not ok");
