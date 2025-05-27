@@ -5,6 +5,7 @@ import styles from "./index.module.css";
 import { authFetch } from "@/app/util/authFetch";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CircularProgress } from "@mui/material";
+import useFileterStore from "@/app/store/useFilterStore";
 
 // 디바운스 함수 (간단한 버전)
 function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
@@ -67,13 +68,18 @@ export default function FilterableObject() {
   const [wishList, setWishList] = useState<WishlistItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const trigger = useRef(true);
+  const { transactionType, purpose, maxPrice, maxRentPrce } = useFileterStore();
 
   const fetchData = useCallback(async () => {
     if (isLoading || !trigger.current) return;
     setIsLoading(true);
     const response = await authFetch({
-      url: `/api/house-board/create?page=${pageNumber.current}`,
-      // url: `${process.env.NEXT_PUBLIC_API_PATH}/house-board/list?page=${pageNumber.current}`,
+      // url: `/api/house-board/create?page=${pageNumber.current}`,
+      url: `${process.env.NEXT_PUBLIC_API_PATH}/house-board/list?page=${
+        pageNumber.current
+      }&maxPrice=${maxPrice}&maxRentPrce=${maxRentPrce}&${
+        transactionType ? `transactionType=${transactionType}` : ""
+      }&${purpose ? `purpose=${purpose}` : ""}`,
     });
     if (!response.ok) {
       throw new Error("Network response was not ok");
@@ -150,6 +156,19 @@ export default function FilterableObject() {
             wishilist={wishList.map((item) => item.pid)}
           />
         ))}
+        {data.length === 0 && !isLoading && (
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            검색 결과가 없어요.
+          </div>
+        )}
         <div className={styles.loading}>
           {isLoading && <CircularProgress />}
         </div>

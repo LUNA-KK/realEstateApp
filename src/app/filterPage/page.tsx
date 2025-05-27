@@ -3,10 +3,11 @@
 import Button from "@/components/Button";
 import styles from "./page.module.css";
 import Slider from "@mui/material/Slider";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { authFetch } from "../util/authFetch";
 import { create } from "zustand";
 import useRegionCode from "../store/useRegionCode";
+import useFileterStore from "../store/useFilterStore";
 
 interface RegionProps {
   title: string;
@@ -191,18 +192,38 @@ const FilterArea = ({
   title,
   target,
   isTrans = false,
+  isPurpose = false,
 }: {
   title: string;
   target: string[];
   isTrans?: boolean;
+  isPurpose?: boolean;
 }) => {
   const [isSelected, setIsSelected] = useState<string | undefined>();
   const { setType } = useRegionCode();
+  const { setPurpose, setTransactionType } = useFileterStore();
+
   const onclick = (type: string) => {
     if (isTrans) {
       const number = type === "매매" ? 1 : type === "전세" ? 2 : 3;
       setType(number);
+      setTransactionType(type);
+
+      if (isSelected === type) {
+        setIsSelected(undefined);
+        setTransactionType("");
+        return;
+      }
     }
+
+    if (isPurpose) {
+      setPurpose(type);
+      if (isSelected === type) {
+        setIsSelected(undefined);
+        return;
+      }
+    }
+
     if (isSelected === type) {
       setIsSelected(undefined);
       return;
@@ -326,7 +347,7 @@ export default function FilterPage() {
       <div className={styles.divider} />
       <FilterArea title={"거래 방식"} target={transactionType} isTrans />
       <div className={styles.divider} />
-      <FilterArea title={"매물 종류"} target={type} />
+      <FilterArea title={"매물 종류"} target={type} isPurpose />
       <div className={styles.divider} />
       <FilterTargetWithSlider target={priceType} />
       <div className={styles.divider} />

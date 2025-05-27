@@ -220,6 +220,18 @@ export default function DocumentDetailPage() {
     });
   }
 
+  const safeExplainTextObj = [
+    {
+      text: "소유권 관련 특이사항이 없어요.",
+    },
+    {
+      text: "집주인이 매물을 담보로 받은 융자금이 없어요.",
+    },
+    {
+      text: "가압류, 가처분, 경매 등 채권 관련 특이사항이 없어요.",
+    },
+  ];
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -252,7 +264,7 @@ export default function DocumentDetailPage() {
           등기부등본 발급일자 :{" "}
           {new Date(documentDetail.issueDate).toLocaleString("ko-KR")}
         </div>
-        {explainTextObj && (
+        {explainTextObj ? (
           <div className={styles.explain}>
             {explainTextObj &&
               explainTextObj.map((item, index) => (
@@ -263,6 +275,12 @@ export default function DocumentDetailPage() {
                   sub={item.sub}
                 />
               ))}
+          </div>
+        ) : (
+          <div className={styles.explain}>
+            {safeExplainTextObj.map((item, index) => (
+              <StatusText text={item.text} code={code} key={index} />
+            ))}
           </div>
         )}
         <div className={styles.divider} />

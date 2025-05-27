@@ -34,6 +34,7 @@ export default function RecommendCard({
   const [show, setShow] = useState(false);
   const [isLiked, setIsLiked] = useState(wishilist?.includes(houseid) || false);
   const ref = useRef<HTMLAnchorElement>(null);
+  const [image, setImage] = useState<any>();
 
   if (isRecommended) {
     console.log("wishilist", wishilist);
@@ -56,6 +57,30 @@ export default function RecommendCard({
       if (width > 300) {
         setShow(true);
       }
+    }
+
+    const getImage = async (url: string) => {
+      const get = await fetch(`/api/house-board/detail/image?url=${url}`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
+        },
+      });
+
+      return get;
+    };
+
+    if (src) {
+      if (src.startsWith("https")) {
+        setImage(src);
+        return;
+      }
+      getImage(src)
+        .then((res) => {
+          return res.blob();
+        })
+        .then((res) => {
+          setImage(URL.createObjectURL(res));
+        });
     }
   }, []);
 
