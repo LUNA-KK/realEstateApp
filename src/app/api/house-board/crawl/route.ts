@@ -5,17 +5,16 @@ export async function GET(req: NextRequest) {
   const token = req.headers.get("authorization") ?? "";
   const searchParams = req.nextUrl.searchParams;
   const code = searchParams.get("code"); // "code"라는 이름의 쿼리 파라미터 값을 가져옴
-  const uid = searchParams.get("uid"); // "uid"라는 이름의 쿼리 파라미터 값을 가져옴
-
-  console.log(code, uid);
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_PATH}/recommend/list?addrcode=${code}&uid=${uid}`,
+    `${process.env.NEXT_PUBLIC_API_PATH}/addrCode/crawl?code=${code}`,
     {
       method: "GET",
       headers: { "Content-Type": "application/json", Authorization: token },
     }
   );
+
+  console.log(response);
 
   if (!response.ok) {
     // 응답이 성공적이지 않으면 (2xx 상태 코드가 아니면)
@@ -29,8 +28,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const result = await response.json();
-    return NextResponse.json(result);
+    return NextResponse.json(1);
   } catch (e) {
     // JSON 파싱 중 에러 발생 시 (예: 빈 응답)
     console.error("Failed to parse JSON from external API:", e);

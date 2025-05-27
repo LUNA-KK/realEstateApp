@@ -57,15 +57,15 @@ export default function Recommend() {
 
       // 앱 진입 시 크롤링
       await authFetch({
-        url: `${process.env.NEXT_PUBLIC_API_PATH}/addrCode/crawl?code=${code}`,
+        // url: `${process.env.NEXT_PUBLIC_API_PATH}/addrCode/crawl?code=${code}`,
+        url: `/api/house-board/crawl?code=${code}`,
       });
 
       const uid = sessionStorage.getItem("userId");
-      console.log("uid", uid);
 
       // 크롤링 매물
       const response = await authFetch({
-        url: `${process.env.NEXT_PUBLIC_API_PATH}/recommend/list?addrcode=${code}&uid=${uid}`,
+        url: `/api/house-board/addrCode?code=${code}&uid=${uid}`,
       });
 
       if (!response.ok) {
