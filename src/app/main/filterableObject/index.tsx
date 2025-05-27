@@ -92,7 +92,9 @@ export default function FilterableObject() {
         pageNumber.current
       }&maxPrice=${maxPrice}&maxRentPrce=${maxRentPrce}&${
         transactionType ? `transactionType=${transactionType}` : ""
-      }&${purpose ? `purpose=${purpose}` : ""&${code ? `addrCode=${code}` : ""}`,*/
+      }&${purpose ? `purpose=${purpose}` : ""}&${
+        code ? `addrCode=${code}` : ""
+      }`,*/
     });
     if (!response.ok) {
       throw new Error("Network response was not ok");
