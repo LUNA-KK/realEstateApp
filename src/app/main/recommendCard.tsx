@@ -15,6 +15,7 @@ interface RecommendCardProps {
   isFavorite?: boolean;
   src?: string;
   liked?: boolean;
+  wishilist?: number[];
 }
 
 export default function RecommendCard({
@@ -26,9 +27,10 @@ export default function RecommendCard({
   location,
   src,
   liked,
+  wishilist,
 }: RecommendCardProps) {
   const [show, setShow] = useState(false);
-  const [isLiked, setIsLiked] = useState(liked || false);
+  const [isLiked, setIsLiked] = useState(false);
   const ref = useRef<HTMLAnchorElement>(null);
 
   const toggleLike = async (id: number) => {
@@ -49,6 +51,12 @@ export default function RecommendCard({
       }
     }
   }, []);
+
+  useEffect(() => {
+    if (wishilist) {
+      setIsLiked(wishilist.includes(houseid));
+    }
+  }, [wishilist]);
 
   const formatPrice = (price: number) => {
     if (price >= 10000) {

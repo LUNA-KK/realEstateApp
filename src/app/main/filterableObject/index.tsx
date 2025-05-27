@@ -1,6 +1,5 @@
 "use client";
 
-import { useSampleHouseList } from "@/app/store/useSampleHouseList";
 import RecommendCard from "../recommendCard";
 import styles from "./index.module.css";
 import { authFetch } from "@/app/util/authFetch";
@@ -134,6 +133,7 @@ export default function FilterableObject() {
   }, []);
 
   // const sampleHouseList = useSampleHouseList((state) => state.sampleHouseList);
+
   return (
     <div>
       <div className={styles.container}>
@@ -147,7 +147,7 @@ export default function FilterableObject() {
             area={`${data.exclusiveArea}m²`}
             location={data.address}
             src={data.pimg}
-            liked={wishList.some((item) => item.pid === data.pid)}
+            wishilist={wishList.map((item) => item.pid)}
           />
         ))}
         <div className={styles.loading}>

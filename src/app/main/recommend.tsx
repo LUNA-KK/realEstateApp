@@ -111,7 +111,7 @@ export default function Recommend() {
             price={data.price}
             area={`${data.exclusiveArea}m²`}
             location={data.address}
-            liked={wishList.some((item) => item.pid === data.pid)}
+            wishilist={wishList.map((item) => item.pid)}
           />
         ))}
       </div>
