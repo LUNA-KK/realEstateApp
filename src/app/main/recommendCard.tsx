@@ -16,6 +16,7 @@ interface RecommendCardProps {
   src?: string;
   liked?: boolean;
   wishilist?: number[];
+  isRecommended?: boolean;
 }
 
 export default function RecommendCard({
@@ -28,10 +29,16 @@ export default function RecommendCard({
   src,
   liked,
   wishilist,
+  isRecommended = false,
 }: RecommendCardProps) {
   const [show, setShow] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState(wishilist?.includes(houseid) || false);
   const ref = useRef<HTMLAnchorElement>(null);
+
+  if (isRecommended) {
+    console.log("wishilist", wishilist);
+    console.log(houseid);
+  }
 
   const toggleLike = async (id: number) => {
     await authFetch({
@@ -56,7 +63,7 @@ export default function RecommendCard({
     if (wishilist) {
       setIsLiked(wishilist.includes(houseid));
     }
-  }, [wishilist]);
+  }, [wishilist, houseid]);
 
   const formatPrice = (price: number) => {
     if (price >= 10000) {
@@ -75,9 +82,7 @@ export default function RecommendCard({
       className={styles.container}
       ref={ref}
     >
-      {show && (
-        <img src={src || "/housePicture.jpg"} className={styles.image} />
-      )}
+      {show && src && <img src={src} className={styles.image} />}
       <div className={styles.content}>
         <div>{type}</div>
         <div>

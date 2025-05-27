@@ -4,7 +4,7 @@ import Button from "@/components/Button";
 import styles from "./page.module.css";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { use } from "react";
 import { useSampleHouseList } from "@/app/store/useSampleHouseList";
 import { authFetch } from "@/app/util/authFetch";
@@ -45,37 +45,55 @@ const mock = {
 
 type DetailResponse = typeof mock;
 
+interface WishlistItem {
+  pid: number;
+  userId: string;
+  ptitle: string;
+  content: string;
+  pimg: string;
+  views: number;
+  createdAt: string;
+}
+
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const { id } = use(params);
-  const [liked, setLiked] = useState(false);
   const [houseDetail, setHouseDetail] = useState<DetailResponse | null>(null);
   const [error, setError] = useState<any>(false);
   const [image, setImage] = useState<any>();
+  const [isLiked, setIsLiked] = useState(false);
+  const [wishList, setWishList] = useState<WishlistItem[]>();
+
+  const getWishList = useCallback(async () => {
+    const response = await authFetch({
+      url: `/api/wish/list`,
+    });
+    if (!response.ok) {
+      throw new Error("Failed to fetch wishlist");
+    }
+    const wishList: WishlistItem[] = await response.json();
+    setWishList(wishList);
+    const n = wishList.map((item) => item.pid);
+    const isLike = n.includes(Number(id));
+    setIsLiked(isLike);
+    return wishList;
+  }, []);
 
   const onClickAnalyze = () => {
     router.push(`/main/document/analyze/${id}`);
   };
 
-  const toggleLike = (id: number) => {
-    const likeInfo = JSON.parse(localStorage.getItem("liked") || "[]");
-    if (likeInfo.includes(id)) {
-      localStorage.setItem(
-        "liked",
-        JSON.stringify(likeInfo.filter((item: number) => item !== id))
-      );
-      setLiked(!liked);
-      return;
-    }
-    localStorage.setItem("liked", JSON.stringify([...likeInfo, id]));
-    setLiked(!liked);
+  const toggleLike = async (id: number) => {
+    await authFetch({
+      // url: `${process.env.NEXT_PUBLIC_API_PATH}/wishlist/${id}/toggle`,
+      url: `/api/wish?id=${id}`,
+      method: "POST",
+    });
+
+    setIsLiked((prev) => !prev);
   };
 
   useEffect(() => {
-    const likeInfo = JSON.parse(localStorage.getItem("liked") || "[]");
-    if (likeInfo.includes(Number(id))) {
-      setLiked(true);
-    }
     const getImage = async (url: string) => {
       const get = await fetch(`/api/house-board/detail/image?url=${url}`, {
         headers: {
@@ -117,6 +135,21 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       .catch((error) => console.error("이미지 없음"));
   }, []);
 
+  useEffect(() => {
+    getWishList();
+  }, [getWishList, id]);
+
+  const formatPrice = (price: number) => {
+    if (price >= 10000) {
+      let base = `${(price / 10000).toFixed()}억`;
+      if (price % 10000 === 0) {
+        return base;
+      }
+      return `${(price / 10000).toFixed()}억 ${price % 10000}만원`;
+    }
+    return `${price}만원`;
+  };
+
   if (error) {
     alert("잘못된 접근입니다.");
     router.push("/main");
@@ -132,7 +165,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       />
       <img
         className={styles.image}
-        src={houseDetail.houseBoardDTO.pimg ? `${image}` : "/housePicture.jpg"}
+        src={houseDetail.houseBoardDTO.pimg ? `${image}` : "/defaultHouse.png"}
       />
       <div className={styles.layout}>
         <div className={styles["button-wrapper"]}>
@@ -141,7 +174,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
               width="30"
               height="30"
               viewBox="0 0 30 30"
-              fill={liked ? "red" : "none"}
+              fill={isLiked ? "red" : "none"}
               stroke="black"
               strokeWidth="2"
               strokeLinecap="round"
@@ -167,8 +200,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
             가격{" "}
             <div>
               {houseDetail.houseInfoDTO.transactionType === "월세"
-                ? houseDetail.houseInfoDTO.rentPrc
-                : houseDetail.houseInfoDTO.price}
+                ? formatPrice(houseDetail.houseInfoDTO.rentPrc)
+                : formatPrice(houseDetail.houseInfoDTO.price)}
               만원
             </div>
           </div>
