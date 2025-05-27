@@ -65,9 +65,11 @@ const MarkerList = ({
 }: {
   geocoder: kakao.maps.services.Geocoder;
 }) => {
-  const [position, setPosition] = useState<RecommnedPosition>(samplePostion);
-  const router = useRouter();
   const { code } = useRegionCode();
+  const [position, setPosition] = useState<RecommnedPosition>(
+    code === "4413133000" ? samplePostion : []
+  );
+  const router = useRouter();
 
   useEffect(() => {
     // geocoder가 준비되면 한 번만 실행
