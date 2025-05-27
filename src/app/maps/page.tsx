@@ -64,10 +64,8 @@ const MarkerList = ({
 }: {
   geocoder: kakao.maps.services.Geocoder;
 }) => {
-  const [position, setPosition] = useState<RecommnedPosition>([]);
+  const [position, setPosition] = useState<RecommnedPosition>(samplePostion);
   const router = useRouter();
-
-  console.log(position);
 
   useEffect(() => {
     // geocoder가 준비되면 한 번만 실행
@@ -97,7 +95,7 @@ const MarkerList = ({
     const getList = async () => {
       try {
         const allList = await Promise.all(
-          Array.from({ length: 10 }, (_, i) =>
+          Array.from({ length: 20 }, (_, i) =>
             authFetch({
               url: `/api/house-board/create?page=${i}`,
             })
