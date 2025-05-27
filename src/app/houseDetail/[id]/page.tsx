@@ -202,7 +202,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
               {houseDetail.houseInfoDTO.transactionType === "월세"
                 ? formatPrice(houseDetail.houseInfoDTO.rentPrc)
                 : formatPrice(houseDetail.houseInfoDTO.price)}
-              만원
             </div>
           </div>
           <div className={styles.line}>
