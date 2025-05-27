@@ -192,26 +192,33 @@ export default function DocumentDetailPage() {
     );
   }
 
-  const riskKeywords = documentDetail.riskKeywords
-    .split(",")
-    .map((keyword) => keyword.trim());
-  const riskKeywordCount = riskKeywords.length;
-
-  const explainTextObj = documentDetail.mainWarnings.split("/").map((text) => {
-    const splitText = text.split("-");
-
-    return {
-      text: splitText[0].trim(),
-      sub: splitText[1].trim(),
-    };
-  });
-
   const code =
     documentDetail.riskLevel === "안전"
       ? "safe"
       : documentDetail.riskLevel === "주의"
       ? "warning"
       : "danger";
+
+  let riskKeywords;
+  let riskKeywordCount;
+  let explainTextObj;
+  if (code !== "safe") {
+    riskKeywords = documentDetail.riskKeywords
+      .split(",")
+      .map((keyword) => keyword.trim());
+    riskKeywordCount = riskKeywords.length;
+    console.log("riskKeywords", riskKeywords);
+    console.log("riskKeywordCount", riskKeywordCount);
+
+    explainTextObj = documentDetail.mainWarnings.split("/").map((text) => {
+      const splitText = text.split("-");
+
+      return {
+        text: splitText[0].trim(),
+        sub: splitText[1].trim(),
+      };
+    });
+  }
 
   return (
     <div className={styles.container}>
@@ -245,25 +252,31 @@ export default function DocumentDetailPage() {
           등기부등본 발급일자 :{" "}
           {new Date(documentDetail.issueDate).toLocaleString("ko-KR")}
         </div>
-        <div className={styles.explain}>
-          {explainTextObj.map((item, index) => (
-            <StatusText
-              text={item.text}
-              code={code}
-              key={index}
-              sub={item.sub}
-            />
-          ))}
-        </div>
+        {explainTextObj && (
+          <div className={styles.explain}>
+            {explainTextObj &&
+              explainTextObj.map((item, index) => (
+                <StatusText
+                  text={item.text}
+                  code={code}
+                  key={index}
+                  sub={item.sub}
+                />
+              ))}
+          </div>
+        )}
         <div className={styles.divider} />
+
         <div className={styles.content}>
           <div className={styles.result}>
             <span>위험 키워드</span>
             <span>
-              {riskKeywordCount === 0 ? "없음" : `${riskKeywordCount}개`}
+              {riskKeywordCount === 0 || !riskKeywordCount
+                ? "없음"
+                : `${riskKeywordCount}개`}
             </span>
           </div>
-          {riskKeywords.length > 0 && (
+          {riskKeywords && riskKeywords.length > 0 && (
             <>
               <div
                 style={{
