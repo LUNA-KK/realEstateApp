@@ -87,9 +87,12 @@ const MarkerList = ({
             }
           });
         });
-        if (result) positions.push(result);
+        if (result) {
+          positions.push(result);
+          console.log(positions.map((pos) => pos.id));
+        }
       }
-      setPosition(positions);
+      setPosition((prev) => [...positions, ...prev]);
     };
 
     const getList = async () => {

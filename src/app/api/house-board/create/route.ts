@@ -6,8 +6,8 @@ export async function GET(req: NextRequest) {
 
   const { searchParams } = new URL(req.url);
   const page = searchParams.get("page") ?? "0";
-  const maxPrice = searchParams.get("maxPrice") ?? "0";
-  const maxRentPrce = searchParams.get("maxRentPrce") ?? "0";
+  const maxPrice = searchParams.get("maxPrice") ?? "2000";
+  const maxRentPrce = searchParams.get("maxRentPrce") ?? "500";
   const transactionType = searchParams.get("transactionType") ?? "";
   const purpose = searchParams.get("purpose") ?? "";
 
