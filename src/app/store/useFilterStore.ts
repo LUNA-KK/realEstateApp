@@ -19,7 +19,7 @@ interface Props {
 }
 
 const useFileterStore = create<Props>((set) => ({
-  maxPrice: 2000,
+  maxPrice: 2000000,
   minPrice: 0,
   maxRentPrce: 500,
   minRentPrice: 0,
