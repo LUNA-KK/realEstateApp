@@ -57,8 +57,8 @@ export default function Recommend() {
 
       // 앱 진입 시 크롤링
       await authFetch({
-        url: `${process.env.NEXT_PUBLIC_API_PATH}/addrCode/crawl?code=${code}`,
-        // url: `/api/house-board/crawl?code=${code}`,
+        // url: `${process.env.NEXT_PUBLIC_API_PATH}/addrCode/crawl?code=${code}`,
+        url: `/api/house-board/crawl?code=${code}`,
       });
 
       const uid = sessionStorage.getItem("userId");
