@@ -23,6 +23,7 @@ interface DocumentListItem {
   riskDetails: any;
   transactionType: string;
   purpose: string;
+  ragAnswer?: string;
 }
 
 interface DocumentListItemProps {
@@ -95,7 +96,7 @@ const ListItem = ({
 };
 
 export default function DocumentPage() {
-  const [list, setList] = useState<DocumentListItem[]>([dangerMock]);
+  const [list, setList] = useState<DocumentListItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -133,13 +134,15 @@ export default function DocumentPage() {
     );
   }
 
+  const newList = list.filter((item) => item.ragAnswer);
+
   return (
     <div className={styles.container}>
       <div className={styles.title}>문서 분석</div>
       {list.length > 0 ? (
         <div className={styles.list}>
           <div className={styles.subtitle}>분석된 문서들</div>
-          {list.map((doc) => (
+          {newList.map((doc) => (
             <ListItem
               key={doc.id}
               id={doc.id}

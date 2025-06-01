@@ -74,7 +74,7 @@ export default function AnalyzePage() {
         }
         router.replace(`/main/document/analyze/detail/${data.id}`);
       } catch {
-        router.replace("/main/document/analyze/detail/22");
+        router.replace("/main/document");
       } finally {
         setIsLoading(false);
       }
