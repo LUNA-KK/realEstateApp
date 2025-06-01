@@ -72,9 +72,9 @@ export default function AnalyzePage() {
         if (!response.ok) {
           throw new Error("분석 요청에 실패했습니다.");
         }
-        router.replace(`/main/document/detail/${data.id}`);
+        router.replace(`/main/document/analyze/detail/${data.id}`);
       } catch {
-        router.replace("/main/document/detail/22");
+        router.replace("/main/document/analyze/detail/22");
       } finally {
         setIsLoading(false);
       }

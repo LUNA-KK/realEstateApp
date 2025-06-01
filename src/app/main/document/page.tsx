@@ -65,7 +65,7 @@ const ListItem = ({
 }: DocumentListItemProps) => {
   const router = useRouter();
   const onClick = () => {
-    router.push(`/main/document/detail/${id}`);
+    router.push(`/main/document/analyze/detail/${id}`);
   };
   return (
     <div className={styles["listItem-container"]} onClick={onClick}>
@@ -85,7 +85,7 @@ const ListItem = ({
         매물 리포트
       </div>
       <div className={styles["listItem-subtitle"]}>
-        발급일자: {new Date(issueDate).toLocaleString()}
+        발급일자: {new Date().toLocaleString()}
       </div>
       <div className={styles["listItem-content"]}>
         {transactionType}, {purpose}

@@ -157,14 +157,36 @@ const checkTitle = [
 export default function AnalyzeDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const [documentDetail, setDocumentDetail] = useState<NewDetail | null>(
-    newMock
-  );
+  const [documentDetail, setDocumentDetail] = useState<NewDetail>();
   const [isPdfOpen, setIsPdfOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // add fetch logic
+    const getDocumentDetail = async (id: string) => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(`/api/document/analyze/detail/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + sessionStorage.getItem("accessToken"),
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Failed to fetch document details");
+        }
+        const data: NewDetail = await response.json();
+        setDocumentDetail(data);
+      } catch (error) {
+        console.error("Error fetching document details:", error);
+        return null;
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    getDocumentDetail(id);
   }, []);
+
+  if (!documentDetail) return null;
 
   const ragAnswer = documentDetail?.ragAnswer;
   const lines = ragAnswer?.split("\n").filter((line) => line.trim() !== "")!;
@@ -256,7 +278,7 @@ export default function AnalyzeDetailPage() {
 
         <div className={styles.content}>
           <div className={styles.result}>
-            <span>위험 키워드</span>
+            <span>키워드 요약</span>
             <span>
               {riskKeywordCount === 0 || !riskKeywordCount
                 ? "없음"
