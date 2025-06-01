@@ -40,6 +40,35 @@ const dangerMock: DocumentDetail = {
   },
 };
 
+const newMock = {
+  id: 33,
+  pid: 42756,
+  userid: "test03",
+  ragAnswer:
+    "0. 최종 소유주는 지상식과 이갑연입니다. 두 사람이 각각 2분의 1의 지분을 가지고 있습니다.\n\n1. 사용자의 등기부등본에서 등장하는 용어는 근저당권, 소유권이전등기, 소유권보존등기입니다.\n\n2. 소유권 및 권리 우선순위에 주의할 점은 소유권이 지상식과 이갑연 두 사람에게 공동으로 있으며, 근저당권이 설정되어 있었지만 현재는 말소된 상태입니다. 이는 해당 부동산에 대한 금융기관의 담보권이 없다는 것을 의미합니다.\n\n3. 주택 소재지는 경상남도 진주시 충무공동입니다. 따라서 소액임차인 보호 한도(보증금 보호 가능 금액)는 75000000원입니다.\n\n4. 실거주 목적 구매자 관점에서 주의할 점은 소유권이 두 사람에게 공동으로 있으므로, 매매 계약 시 두 사람 모두의 동의가 필요하다는 점입니다.\n\n5. 계약서에 넣으면 좋을 특약 조항으로는 소유권 이전 시 두 소유주 모두의 서명이 필요하다는 점을 명시하는 것이 좋을 것 같습니다.\n\n6. 등기부등본에서 등장하는 법률 용어 중 '근저당권'은 부동산을 담보로 제공하여 대출을 받을 때 설정하는 권리를 의미하며, '소유권이전등기'는 소유권을 다른 사람에게 넘기는 것을 의미합니다. '소유권보존등기'는 소유권을 보호하기 위해 설정하는 등기를 의미합니다.\n\n7. 현재 사용자의 등기부등본의 전체적인 위험도는 '안전'으로 판단됩니다. 근저당권이 말소되어 있고, 소유권이 명확하게 두 사람에게 있으며, 소유권보존등기가 있어 소유권이 보호되고 있기 때문입니다.",
+  purpose: "원룸",
+  transactionType: "월세",
+  price: 100000.0,
+  rentPrc: 40.0,
+  exclusiveArea: 18.45,
+  pdfBase64: "아주 긴 pdf값",
+  riskDetails: null,
+};
+
+interface NewDetail {
+  id: number;
+  pid: number;
+  userid: string;
+  ragAnswer: string;
+  purpose: string;
+  transactionType: string;
+  price: number;
+  rentPrc: number;
+  exclusiveArea: number;
+  pdfBase64: string;
+  riskDetails: any;
+}
+
 type Status = string;
 
 const DangerIcon = () => {
@@ -155,6 +184,15 @@ const response = {
   amount: 5000000,
   owner: "홍길동",
 };
+
+const checkTitle = [
+  "소유권 및 권리 우선순위에 주의할 점",
+  "실거주 목적이라면?",
+  "계약서 작성 시 특약조항 추천",
+  "쉽게 알아보는 법률 용어",
+];
+
+const checkList = () => {};
 
 export default function DocumentDetailPage() {
   const { id } = useParams<{ id: string }>();

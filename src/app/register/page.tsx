@@ -52,13 +52,17 @@ export default function Register() {
         userEmail: user.email,
       };
 
-      const response = await fetch(`/api/auth/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userObject),
-      });
+      const response = await fetch(
+        `/api/auth/register`,
+        // `${process.env.NEXT_PUBLIC_API_PATH}/member/join`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userObject),
+        }
+      );
 
       if (response.status === 200 || response.status === 201) {
         alert("회원가입 성공");

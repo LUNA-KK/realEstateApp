@@ -4,11 +4,14 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   const body = await req.json();
 
-  const response = await fetch("http://218.150.182.76/api/auth/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_PATH}/auth/login`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    }
+  );
 
   if (!response.ok) {
     // 응답이 성공적이지 않으면 (2xx 상태 코드가 아니면)
