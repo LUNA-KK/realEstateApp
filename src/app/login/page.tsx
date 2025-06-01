@@ -29,8 +29,8 @@ export default function Login() {
     };
     if (Object.values(user).every((value) => value)) {
       const response = await fetch(
-        // "/api/auth/login",
-        `http://218.150.182.76:8080/api/auth/login`,
+        "/api/auth/login",
+        // `http://218.150.182.76:8080/api/auth/login`,
         {
           method: "POST",
           headers: {
